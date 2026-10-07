@@ -1,0 +1,12 @@
+id: untolerated-taint
+title: Pod targets a tainted node without a toleration
+description: >
+  The pod selects the dedicated=batch node, which is tainted dedicated=batch:NoSchedule.
+  Without a matching toleration the scheduler will not place it there.
+namespace: fault-untolerated-taint
+target:
+  kind: Deployment
+  name: nightly-batch
+expected_category: untolerated_taint
+expected_signals:
+  - "untolerated taint {dedicated: batch}"

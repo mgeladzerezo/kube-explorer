@@ -1,0 +1,285 @@
+# Synthesized by faults/tools/synthesize_captures.py; not a recording of a live cluster.
+apiVersion: v1
+kind: Event
+metadata:
+  name: catalog-2zccvqq46-8jlp2.9c79544f8bmt
+  namespace: fault-bad-image-tag
+involvedObject:
+  kind: Pod
+  name: catalog-2zccvqq46-8jlp2
+  namespace: fault-bad-image-tag
+type: Normal
+reason: Scheduled
+message: Successfully assigned fault-bad-image-tag/catalog-2zccvqq46-8jlp2 to kube-explorer-worker
+count: 1
+firstTimestamp: '2026-09-28T09:14:02Z'
+lastTimestamp: '2026-09-28T09:14:09Z'
+---
+apiVersion: v1
+kind: Event
+metadata:
+  name: catalog-2zccvqq46-8jlp2.jht7vv7qq8qg
+  namespace: fault-bad-image-tag
+involvedObject:
+  kind: Pod
+  name: catalog-2zccvqq46-8jlp2
+  namespace: fault-bad-image-tag
+type: Normal
+reason: Pulling
+message: Pulling image "nginx:1.27.99-alpine"
+count: 4
+firstTimestamp: '2026-09-28T09:14:02Z'
+lastTimestamp: '2026-09-28T09:21:40Z'
+---
+apiVersion: v1
+kind: Event
+metadata:
+  name: catalog-2zccvqq46-8jlp2.48m4g5p5jfd7
+  namespace: fault-bad-image-tag
+involvedObject:
+  kind: Pod
+  name: catalog-2zccvqq46-8jlp2
+  namespace: fault-bad-image-tag
+type: Warning
+reason: Failed
+message: 'Failed to pull image "nginx:1.27.99-alpine": rpc error: code = NotFound desc = failed to pull and unpack image "docker.io/library/nginx:1.27.99-alpine": failed to resolve reference "docker.io/library/nginx:1.27.99-alpine": docker.io/library/nginx:1.27.99-alpine: not found'
+count: 4
+firstTimestamp: '2026-09-28T09:14:02Z'
+lastTimestamp: '2026-09-28T09:21:40Z'
+---
+apiVersion: v1
+kind: Event
+metadata:
+  name: catalog-2zccvqq46-8jlp2.r8567wsrtk5w
+  namespace: fault-bad-image-tag
+involvedObject:
+  kind: Pod
+  name: catalog-2zccvqq46-8jlp2
+  namespace: fault-bad-image-tag
+type: Warning
+reason: Failed
+message: 'Error: ErrImagePull'
+count: 4
+firstTimestamp: '2026-09-28T09:14:02Z'
+lastTimestamp: '2026-09-28T09:21:40Z'
+---
+apiVersion: v1
+kind: Event
+metadata:
+  name: catalog-2zccvqq46-8jlp2.bjhgqq5k6z6f
+  namespace: fault-bad-image-tag
+involvedObject:
+  kind: Pod
+  name: catalog-2zccvqq46-8jlp2
+  namespace: fault-bad-image-tag
+type: Normal
+reason: BackOff
+message: Back-off pulling image "nginx:1.27.99-alpine"
+count: 18
+firstTimestamp: '2026-09-28T09:14:02Z'
+lastTimestamp: '2026-09-28T09:21:40Z'
+---
+apiVersion: v1
+kind: Event
+metadata:
+  name: catalog-2zccvqq46-8jlp2.f6vqzf47zvlh
+  namespace: fault-bad-image-tag
+involvedObject:
+  kind: Pod
+  name: catalog-2zccvqq46-8jlp2
+  namespace: fault-bad-image-tag
+type: Warning
+reason: Failed
+message: 'Error: ImagePullBackOff'
+count: 18
+firstTimestamp: '2026-09-28T09:14:02Z'
+lastTimestamp: '2026-09-28T09:21:40Z'
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: catalog
+  namespace: fault-bad-image-tag
+  creationTimestamp: '2026-09-28T09:14:02Z'
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: catalog
+  template:
+    metadata:
+      labels:
+        app: catalog
+    spec:
+      containers:
+      - name: catalog
+        image: nginx:1.27.99-alpine
+        ports:
+        - containerPort: 80
+status:
+  replicas: 1
+  updatedReplicas: 1
+  readyReplicas: 0
+  unavailableReplicas: 1
+  conditions:
+  - type: Available
+    status: 'False'
+    reason: MinimumReplicasUnavailable
+  - type: Progressing
+    status: 'True'
+    reason: ReplicaSetUpdated
+---
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: catalog-2zccvqq46
+  namespace: fault-bad-image-tag
+  ownerReferences:
+  - apiVersion: apps/v1
+    kind: Deployment
+    name: catalog
+spec:
+  replicas: 1
+status:
+  replicas: 1
+  readyReplicas: 0
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: catalog-2zccvqq46-8jlp2
+  namespace: fault-bad-image-tag
+  labels:
+    app: catalog
+    pod-template-hash: 2zccvqq46
+  ownerReferences:
+  - apiVersion: apps/v1
+    kind: ReplicaSet
+    name: catalog-2zccvqq46
+  creationTimestamp: '2026-09-28T09:14:02Z'
+spec:
+  containers:
+  - name: catalog
+    image: nginx:1.27.99-alpine
+    ports:
+    - containerPort: 80
+  serviceAccountName: default
+  nodeName: kube-explorer-worker
+status:
+  phase: Pending
+  podIP: 10.244.1.10
+  containerStatuses:
+  - name: catalog
+    image: nginx:1.27.99-alpine
+    state:
+      waiting:
+        reason: ImagePullBackOff
+        message: Back-off pulling image "nginx:1.27.99-alpine"
+    lastState: {}
+    ready: false
+    started: false
+    restartCount: 0
+  conditions:
+  - type: PodScheduled
+    status: 'True'
+  - type: Initialized
+    status: 'True'
+  - type: ContainersReady
+    status: 'False'
+  - type: Ready
+    status: 'False'
+---
+apiVersion: v1
+kind: Event
+metadata:
+  name: catalog.qv9sz9pdngb6
+  namespace: fault-bad-image-tag
+involvedObject:
+  kind: Deployment
+  name: catalog
+  namespace: fault-bad-image-tag
+type: Normal
+reason: ScalingReplicaSet
+message: Scaled up replica set catalog-2zccvqq46 to 1
+count: 1
+firstTimestamp: '2026-09-28T09:14:02Z'
+lastTimestamp: '2026-09-28T09:14:09Z'
+---
+apiVersion: v1
+kind: Event
+metadata:
+  name: catalog-2zccvqq46.6lm6wpx49274
+  namespace: fault-bad-image-tag
+involvedObject:
+  kind: ReplicaSet
+  name: catalog-2zccvqq46
+  namespace: fault-bad-image-tag
+type: Normal
+reason: SuccessfulCreate
+message: 'Created pod: catalog-2zccvqq46-8jlp2'
+count: 1
+firstTimestamp: '2026-09-28T09:14:02Z'
+lastTimestamp: '2026-09-28T09:14:09Z'
+---
+apiVersion: v1
+kind: Node
+metadata:
+  name: kube-explorer-control-plane
+  labels:
+    kubernetes.io/hostname: kube-explorer-control-plane
+    kubernetes.io/os: linux
+    node-role.kubernetes.io/control-plane: ''
+spec:
+  taints:
+  - key: node-role.kubernetes.io/control-plane
+    effect: NoSchedule
+status:
+  allocatable:
+    cpu: '8'
+    memory: 16304520Ki
+    pods: '110'
+  conditions:
+  - type: Ready
+    status: 'True'
+    reason: KubeletReady
+---
+apiVersion: v1
+kind: Node
+metadata:
+  name: kube-explorer-worker
+  labels:
+    kubernetes.io/hostname: kube-explorer-worker
+    kubernetes.io/os: linux
+spec: {}
+status:
+  allocatable:
+    cpu: '8'
+    memory: 16304520Ki
+    pods: '110'
+  conditions:
+  - type: Ready
+    status: 'True'
+    reason: KubeletReady
+---
+apiVersion: v1
+kind: Node
+metadata:
+  name: kube-explorer-worker2
+  labels:
+    kubernetes.io/hostname: kube-explorer-worker2
+    kubernetes.io/os: linux
+    dedicated: batch
+spec:
+  taints:
+  - key: dedicated
+    value: batch
+    effect: NoSchedule
+status:
+  allocatable:
+    cpu: '8'
+    memory: 16304520Ki
+    pods: '110'
+  conditions:
+  - type: Ready
+    status: 'True'
+    reason: KubeletReady

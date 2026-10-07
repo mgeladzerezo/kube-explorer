@@ -1,0 +1,31 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: fault-rbac-forbidden
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: pod-lister
+  namespace: fault-rbac-forbidden
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pod-lister
+  namespace: fault-rbac-forbidden
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pod-lister
+  template:
+    metadata:
+      labels:
+        app: pod-lister
+    spec:
+      serviceAccountName: pod-lister
+      containers:
+        - name: lister
+          image: bitnami/kubectl:1.31
+          command: ["sh", "-c", "kubectl get pods -n fault-rbac-forbidden && sleep 3600"]

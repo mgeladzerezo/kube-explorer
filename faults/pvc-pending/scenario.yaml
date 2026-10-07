@@ -1,0 +1,13 @@
+id: pvc-pending
+title: PersistentVolumeClaim names a StorageClass that does not exist
+description: >
+  The claim asks for StorageClass fast-ssd, which the cluster does not have. The claim
+  stays Pending, and the pod that mounts it cannot be scheduled.
+namespace: fault-pvc-pending
+target:
+  kind: Deployment
+  name: media
+expected_category: pvc_unbound
+expected_signals:
+  - fast-ssd
+  - "unbound immediate PersistentVolumeClaims"

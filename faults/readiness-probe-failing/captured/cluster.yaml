@@ -1,0 +1,357 @@
+# Synthesized by faults/tools/synthesize_captures.py; not a recording of a live cluster.
+apiVersion: v1
+kind: Event
+metadata:
+  name: storefront-tccnz8h7k-nt9cz.gn2p2nzrnp22
+  namespace: fault-readiness-probe-failing
+involvedObject:
+  kind: Pod
+  name: storefront-tccnz8h7k-nt9cz
+  namespace: fault-readiness-probe-failing
+type: Normal
+reason: Scheduled
+message: Successfully assigned fault-readiness-probe-failing/storefront-tccnz8h7k-nt9cz to kube-explorer-worker
+count: 1
+firstTimestamp: '2026-09-28T09:14:02Z'
+lastTimestamp: '2026-09-28T09:14:09Z'
+---
+apiVersion: v1
+kind: Event
+metadata:
+  name: storefront-tccnz8h7k-nt9cz.mwmgvkdxkmkg
+  namespace: fault-readiness-probe-failing
+involvedObject:
+  kind: Pod
+  name: storefront-tccnz8h7k-nt9cz
+  namespace: fault-readiness-probe-failing
+type: Warning
+reason: Unhealthy
+message: 'Readiness probe failed: HTTP probe failed with statuscode: 404'
+count: 84
+firstTimestamp: '2026-09-28T09:14:02Z'
+lastTimestamp: '2026-09-28T09:21:40Z'
+---
+apiVersion: v1
+kind: Event
+metadata:
+  name: storefront-tccnz8h7k-lhsc2.z9n2mn46chfr
+  namespace: fault-readiness-probe-failing
+involvedObject:
+  kind: Pod
+  name: storefront-tccnz8h7k-lhsc2
+  namespace: fault-readiness-probe-failing
+type: Normal
+reason: Scheduled
+message: Successfully assigned fault-readiness-probe-failing/storefront-tccnz8h7k-lhsc2 to kube-explorer-worker
+count: 1
+firstTimestamp: '2026-09-28T09:14:02Z'
+lastTimestamp: '2026-09-28T09:14:09Z'
+---
+apiVersion: v1
+kind: Event
+metadata:
+  name: storefront-tccnz8h7k-lhsc2.gj2lggtb25jc
+  namespace: fault-readiness-probe-failing
+involvedObject:
+  kind: Pod
+  name: storefront-tccnz8h7k-lhsc2
+  namespace: fault-readiness-probe-failing
+type: Warning
+reason: Unhealthy
+message: 'Readiness probe failed: HTTP probe failed with statuscode: 404'
+count: 84
+firstTimestamp: '2026-09-28T09:14:02Z'
+lastTimestamp: '2026-09-28T09:21:40Z'
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: storefront
+  namespace: fault-readiness-probe-failing
+  creationTimestamp: '2026-09-28T09:14:02Z'
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: storefront
+  template:
+    metadata:
+      labels:
+        app: storefront
+    spec:
+      containers:
+      - name: storefront
+        image: nginx:1.27-alpine
+        ports:
+        - containerPort: 80
+        readinessProbe:
+          httpGet:
+            path: /healthz
+            port: 80
+          periodSeconds: 5
+status:
+  replicas: 2
+  updatedReplicas: 2
+  readyReplicas: 0
+  unavailableReplicas: 2
+  conditions:
+  - type: Available
+    status: 'False'
+    reason: MinimumReplicasUnavailable
+  - type: Progressing
+    status: 'True'
+    reason: ReplicaSetUpdated
+---
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: storefront-tccnz8h7k
+  namespace: fault-readiness-probe-failing
+  ownerReferences:
+  - apiVersion: apps/v1
+    kind: Deployment
+    name: storefront
+spec:
+  replicas: 2
+status:
+  replicas: 2
+  readyReplicas: 0
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: storefront-tccnz8h7k-nt9cz
+  namespace: fault-readiness-probe-failing
+  labels:
+    app: storefront
+    pod-template-hash: tccnz8h7k
+  ownerReferences:
+  - apiVersion: apps/v1
+    kind: ReplicaSet
+    name: storefront-tccnz8h7k
+  creationTimestamp: '2026-09-28T09:14:02Z'
+spec:
+  containers:
+  - name: storefront
+    image: nginx:1.27-alpine
+    ports:
+    - containerPort: 80
+    readinessProbe:
+      httpGet:
+        path: /healthz
+        port: 80
+      periodSeconds: 5
+  serviceAccountName: default
+  nodeName: kube-explorer-worker
+status:
+  phase: Running
+  podIP: 10.244.1.10
+  containerStatuses:
+  - name: storefront
+    image: nginx:1.27-alpine
+    state:
+      running:
+        startedAt: '2026-09-28T09:14:09Z'
+    lastState: {}
+    ready: false
+    started: true
+    restartCount: 0
+  conditions:
+  - type: PodScheduled
+    status: 'True'
+  - type: Initialized
+    status: 'True'
+  - type: ContainersReady
+    status: 'False'
+  - type: Ready
+    status: 'False'
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: storefront-tccnz8h7k-lhsc2
+  namespace: fault-readiness-probe-failing
+  labels:
+    app: storefront
+    pod-template-hash: tccnz8h7k
+  ownerReferences:
+  - apiVersion: apps/v1
+    kind: ReplicaSet
+    name: storefront-tccnz8h7k
+  creationTimestamp: '2026-09-28T09:14:02Z'
+spec:
+  containers:
+  - name: storefront
+    image: nginx:1.27-alpine
+    ports:
+    - containerPort: 80
+    readinessProbe:
+      httpGet:
+        path: /healthz
+        port: 80
+      periodSeconds: 5
+  serviceAccountName: default
+  nodeName: kube-explorer-worker
+status:
+  phase: Running
+  podIP: 10.244.1.11
+  containerStatuses:
+  - name: storefront
+    image: nginx:1.27-alpine
+    state:
+      running:
+        startedAt: '2026-09-28T09:14:09Z'
+    lastState: {}
+    ready: false
+    started: true
+    restartCount: 0
+  conditions:
+  - type: PodScheduled
+    status: 'True'
+  - type: Initialized
+    status: 'True'
+  - type: ContainersReady
+    status: 'False'
+  - type: Ready
+    status: 'False'
+---
+apiVersion: v1
+kind: Event
+metadata:
+  name: storefront.4fz2rwbw7vrw
+  namespace: fault-readiness-probe-failing
+involvedObject:
+  kind: Deployment
+  name: storefront
+  namespace: fault-readiness-probe-failing
+type: Normal
+reason: ScalingReplicaSet
+message: Scaled up replica set storefront-tccnz8h7k to 2
+count: 1
+firstTimestamp: '2026-09-28T09:14:02Z'
+lastTimestamp: '2026-09-28T09:14:09Z'
+---
+apiVersion: v1
+kind: Event
+metadata:
+  name: storefront-tccnz8h7k.dh5zbgsnm2qg
+  namespace: fault-readiness-probe-failing
+involvedObject:
+  kind: ReplicaSet
+  name: storefront-tccnz8h7k
+  namespace: fault-readiness-probe-failing
+type: Normal
+reason: SuccessfulCreate
+message: 'Created pod: storefront-tccnz8h7k-nt9cz'
+count: 1
+firstTimestamp: '2026-09-28T09:14:02Z'
+lastTimestamp: '2026-09-28T09:14:09Z'
+---
+apiVersion: v1
+kind: Event
+metadata:
+  name: storefront-tccnz8h7k.wn4jgvjr9v8k
+  namespace: fault-readiness-probe-failing
+involvedObject:
+  kind: ReplicaSet
+  name: storefront-tccnz8h7k
+  namespace: fault-readiness-probe-failing
+type: Normal
+reason: SuccessfulCreate
+message: 'Created pod: storefront-tccnz8h7k-lhsc2'
+count: 1
+firstTimestamp: '2026-09-28T09:14:02Z'
+lastTimestamp: '2026-09-28T09:14:09Z'
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: storefront
+  namespace: fault-readiness-probe-failing
+spec:
+  selector:
+    app: storefront
+  ports:
+  - port: 80
+    targetPort: 80
+---
+apiVersion: v1
+kind: Endpoints
+metadata:
+  name: storefront
+  namespace: fault-readiness-probe-failing
+subsets:
+- ports:
+  - port: 80
+  notReadyAddresses:
+  - ip: 10.244.1.10
+    targetRef:
+      kind: Pod
+      name: storefront-tccnz8h7k-nt9cz
+  - ip: 10.244.1.11
+    targetRef:
+      kind: Pod
+      name: storefront-tccnz8h7k-lhsc2
+---
+apiVersion: v1
+kind: Node
+metadata:
+  name: kube-explorer-control-plane
+  labels:
+    kubernetes.io/hostname: kube-explorer-control-plane
+    kubernetes.io/os: linux
+    node-role.kubernetes.io/control-plane: ''
+spec:
+  taints:
+  - key: node-role.kubernetes.io/control-plane
+    effect: NoSchedule
+status:
+  allocatable:
+    cpu: '8'
+    memory: 16304520Ki
+    pods: '110'
+  conditions:
+  - type: Ready
+    status: 'True'
+    reason: KubeletReady
+---
+apiVersion: v1
+kind: Node
+metadata:
+  name: kube-explorer-worker
+  labels:
+    kubernetes.io/hostname: kube-explorer-worker
+    kubernetes.io/os: linux
+spec: {}
+status:
+  allocatable:
+    cpu: '8'
+    memory: 16304520Ki
+    pods: '110'
+  conditions:
+  - type: Ready
+    status: 'True'
+    reason: KubeletReady
+---
+apiVersion: v1
+kind: Node
+metadata:
+  name: kube-explorer-worker2
+  labels:
+    kubernetes.io/hostname: kube-explorer-worker2
+    kubernetes.io/os: linux
+    dedicated: batch
+spec:
+  taints:
+  - key: dedicated
+    value: batch
+    effect: NoSchedule
+status:
+  allocatable:
+    cpu: '8'
+    memory: 16304520Ki
+    pods: '110'
+  conditions:
+  - type: Ready
+    status: 'True'
+    reason: KubeletReady

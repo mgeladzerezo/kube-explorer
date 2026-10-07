@@ -1,0 +1,55 @@
+# Local stack without a cluster or an API key: the backend serves the recorded fault
+# captures (KUBE_MODE=fixture) and answers with the keyword baseline (LLM_MODE=fake).
+# To point it at a real cluster and the real model, see the README.
+services:
+  db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: kube_explorer
+      POSTGRES_PASSWORD: kube_explorer
+      POSTGRES_DB: kube_explorer
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U kube_explorer"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  migrate:
+    build: ./backend
+    command: ["alembic", "upgrade", "head"]
+    environment: &backend-env
+      DATABASE_URL: postgresql+psycopg://kube_explorer:kube_explorer@db:5432/kube_explorer
+      KUBE_MODE: ${KUBE_MODE:-fixture}
+      KUBE_FIXTURE_DIR: /faults
+      LLM_MODE: ${LLM_MODE:-fake}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      ANTHROPIC_MODEL: ${ANTHROPIC_MODEL:-claude-opus-5-5}
+      CORS_ORIGINS: '["http://localhost:5175"]'
+    depends_on:
+      db:
+        condition: service_healthy
+
+  backend:
+    build: ./backend
+    environment: *backend-env
+    volumes:
+      - ./faults:/faults:ro
+    ports:
+      - "8105:8000"
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+
+  frontend:
+    build: ./frontend
+    environment:
+      BACKEND_URL: http://backend:8000
+    ports:
+      - "5175:8080"
+    depends_on:
+      - backend
+
+volumes:
+  db-data:

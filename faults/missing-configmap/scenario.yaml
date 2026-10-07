@@ -1,0 +1,13 @@
+id: missing-configmap
+title: Volume references a ConfigMap that does not exist
+description: >
+  The pod mounts ConfigMap edge-proxy-conf, which is not in the namespace. The volume
+  cannot be set up and the pod stays in ContainerCreating.
+namespace: fault-missing-configmap
+target:
+  kind: Deployment
+  name: edge-proxy
+expected_category: missing_configmap
+expected_signals:
+  - 'configmap "edge-proxy-conf" not found'
+  - FailedMount

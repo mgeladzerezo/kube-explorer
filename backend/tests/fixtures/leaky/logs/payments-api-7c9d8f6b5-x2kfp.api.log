@@ -1,0 +1,15 @@
+2026-09-28T09:20:01Z INFO starting payments-api 2.8.1
+2026-09-28T09:20:01Z DEBUG config: database_url=postgresql://payments:pg-Pa55word@payments-db.shop.svc:5432/payments pool=10
+2026-09-28T09:20:02Z DEBUG outbound request headers: {"Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJwYXltZW50cyJ9.c2lnbmF0dXJlLXZhbHVl", "Accept": "application/json"}
+2026-09-28T09:20:02Z DEBUG aws credentials: AWS_ACCESS_KEY_ID=AKIAIOSFODNN7EXAMPLE AWS_SECRET_ACCESS_KEY=wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
+2026-09-28T09:20:03Z ERROR ledger export failed: jdbc:sqlserver://sql.internal:1433;databaseName=pay;user=sa;password=Sql-Adm1n-pw;encrypt=true
+2026-09-28T09:20:03Z DEBUG retry: curl -H 'Authorization: Basic cGF5bWVudHM6aHVudGVyMg==' -H 'X-Api-Key: xak-9f8e7d6c5b4a' https://ledger.internal/v1/entries
+2026-09-28T09:20:03Z DEBUG deploy hook using github token ghp_0123456789abcdefghijABCDEFGHIJ012345
+2026-09-28T09:20:03Z DEBUG session cookie jwt eyJhbGciOiJSUzI1NiJ9.eyJ1aWQiOjQyfQ.c2Vjb25kLXNpZ25hdHVyZQ
+2026-09-28T09:20:03Z DEBUG loaded signing key
+-----BEGIN RSA PRIVATE KEY-----
+MIIEowIBAAKCAQEAxExamplePrivateKeyMaterialLine1
+ExamplePrivateKeyMaterialLine2
+-----END RSA PRIVATE KEY-----
+2026-09-28T09:20:04Z DEBUG smtp: {"host": "smtp.internal", "password": "json-Smtp-pw", "port": 587}
+2026-09-28T09:20:04Z FATAL could not connect to payments-db.shop.svc:5432: password authentication failed for user "payments"

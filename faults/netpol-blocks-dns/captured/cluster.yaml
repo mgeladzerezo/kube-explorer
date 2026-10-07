@@ -1,0 +1,425 @@
+# Synthesized by faults/tools/synthesize_captures.py; not a recording of a live cluster.
+apiVersion: v1
+kind: Event
+metadata:
+  name: checkout-9g7lkpr86-rfjdr.mj8pdtplqcns
+  namespace: fault-netpol-blocks-dns
+involvedObject:
+  kind: Pod
+  name: checkout-9g7lkpr86-rfjdr
+  namespace: fault-netpol-blocks-dns
+type: Normal
+reason: Scheduled
+message: Successfully assigned fault-netpol-blocks-dns/checkout-9g7lkpr86-rfjdr to kube-explorer-worker
+count: 1
+firstTimestamp: '2026-09-28T09:14:02Z'
+lastTimestamp: '2026-09-28T09:14:09Z'
+---
+apiVersion: v1
+kind: Event
+metadata:
+  name: checkout-9g7lkpr86-rfjdr.9rg7ctxw768v
+  namespace: fault-netpol-blocks-dns
+involvedObject:
+  kind: Pod
+  name: checkout-9g7lkpr86-rfjdr
+  namespace: fault-netpol-blocks-dns
+type: Warning
+reason: Unhealthy
+message: 'Readiness probe failed: ;; connection timed out; no servers could be reached'
+count: 40
+firstTimestamp: '2026-09-28T09:14:02Z'
+lastTimestamp: '2026-09-28T09:21:40Z'
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: checkout
+  namespace: fault-netpol-blocks-dns
+  creationTimestamp: '2026-09-28T09:14:02Z'
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: checkout
+  template:
+    metadata:
+      labels:
+        app: checkout
+    spec:
+      containers:
+      - name: checkout
+        image: busybox:1.36
+        command:
+        - sh
+        - -c
+        - "while true; do\n  wget -q -T 5 -O /dev/null http://payments.fault-netpol-blocks-dns.svc.cluster.local/ \\\n    && echo \"payments reachable\" || echo \"payments request failed\"\n  sleep 10\ndone\n"
+        readinessProbe:
+          exec:
+            command:
+            - nslookup
+            - kubernetes.default.svc.cluster.local
+          periodSeconds: 10
+          timeoutSeconds: 5
+status:
+  replicas: 1
+  updatedReplicas: 1
+  readyReplicas: 0
+  unavailableReplicas: 1
+  conditions:
+  - type: Available
+    status: 'False'
+    reason: MinimumReplicasUnavailable
+  - type: Progressing
+    status: 'True'
+    reason: ReplicaSetUpdated
+---
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: checkout-9g7lkpr86
+  namespace: fault-netpol-blocks-dns
+  ownerReferences:
+  - apiVersion: apps/v1
+    kind: Deployment
+    name: checkout
+spec:
+  replicas: 1
+status:
+  replicas: 1
+  readyReplicas: 0
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: checkout-9g7lkpr86-rfjdr
+  namespace: fault-netpol-blocks-dns
+  labels:
+    app: checkout
+    pod-template-hash: 9g7lkpr86
+  ownerReferences:
+  - apiVersion: apps/v1
+    kind: ReplicaSet
+    name: checkout-9g7lkpr86
+  creationTimestamp: '2026-09-28T09:14:02Z'
+spec:
+  containers:
+  - name: checkout
+    image: busybox:1.36
+    command:
+    - sh
+    - -c
+    - "while true; do\n  wget -q -T 5 -O /dev/null http://payments.fault-netpol-blocks-dns.svc.cluster.local/ \\\n    && echo \"payments reachable\" || echo \"payments request failed\"\n  sleep 10\ndone\n"
+    readinessProbe:
+      exec:
+        command:
+        - nslookup
+        - kubernetes.default.svc.cluster.local
+      periodSeconds: 10
+      timeoutSeconds: 5
+  serviceAccountName: default
+  nodeName: kube-explorer-worker
+status:
+  phase: Running
+  podIP: 10.244.1.10
+  containerStatuses:
+  - name: checkout
+    image: busybox:1.36
+    state:
+      running:
+        startedAt: '2026-09-28T09:14:09Z'
+    lastState: {}
+    ready: false
+    started: true
+    restartCount: 0
+  conditions:
+  - type: PodScheduled
+    status: 'True'
+  - type: Initialized
+    status: 'True'
+  - type: ContainersReady
+    status: 'False'
+  - type: Ready
+    status: 'False'
+---
+apiVersion: v1
+kind: Event
+metadata:
+  name: checkout.24h4wb9nrzz8
+  namespace: fault-netpol-blocks-dns
+involvedObject:
+  kind: Deployment
+  name: checkout
+  namespace: fault-netpol-blocks-dns
+type: Normal
+reason: ScalingReplicaSet
+message: Scaled up replica set checkout-9g7lkpr86 to 1
+count: 1
+firstTimestamp: '2026-09-28T09:14:02Z'
+lastTimestamp: '2026-09-28T09:14:09Z'
+---
+apiVersion: v1
+kind: Event
+metadata:
+  name: checkout-9g7lkpr86.96k6sk7vwgk2
+  namespace: fault-netpol-blocks-dns
+involvedObject:
+  kind: ReplicaSet
+  name: checkout-9g7lkpr86
+  namespace: fault-netpol-blocks-dns
+type: Normal
+reason: SuccessfulCreate
+message: 'Created pod: checkout-9g7lkpr86-rfjdr'
+count: 1
+firstTimestamp: '2026-09-28T09:14:02Z'
+lastTimestamp: '2026-09-28T09:14:09Z'
+---
+apiVersion: v1
+kind: Event
+metadata:
+  name: payments-cqq6r82xw-lhsqt.cjdqjjkbdcxv
+  namespace: fault-netpol-blocks-dns
+involvedObject:
+  kind: Pod
+  name: payments-cqq6r82xw-lhsqt
+  namespace: fault-netpol-blocks-dns
+type: Normal
+reason: Scheduled
+message: Successfully assigned fault-netpol-blocks-dns/payments-cqq6r82xw-lhsqt to kube-explorer-worker
+count: 1
+firstTimestamp: '2026-09-28T09:14:02Z'
+lastTimestamp: '2026-09-28T09:14:09Z'
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: payments
+  namespace: fault-netpol-blocks-dns
+  creationTimestamp: '2026-09-28T09:14:02Z'
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: payments
+  template:
+    metadata:
+      labels:
+        app: payments
+    spec:
+      containers:
+      - name: payments
+        image: nginx:1.27-alpine
+        ports:
+        - containerPort: 80
+status:
+  replicas: 1
+  updatedReplicas: 1
+  readyReplicas: 1
+  unavailableReplicas: 0
+  conditions:
+  - type: Available
+    status: 'True'
+    reason: MinimumReplicasAvailable
+  - type: Progressing
+    status: 'True'
+    reason: ReplicaSetUpdated
+---
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: payments-cqq6r82xw
+  namespace: fault-netpol-blocks-dns
+  ownerReferences:
+  - apiVersion: apps/v1
+    kind: Deployment
+    name: payments
+spec:
+  replicas: 1
+status:
+  replicas: 1
+  readyReplicas: 1
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: payments-cqq6r82xw-lhsqt
+  namespace: fault-netpol-blocks-dns
+  labels:
+    app: payments
+    pod-template-hash: cqq6r82xw
+  ownerReferences:
+  - apiVersion: apps/v1
+    kind: ReplicaSet
+    name: payments-cqq6r82xw
+  creationTimestamp: '2026-09-28T09:14:02Z'
+spec:
+  containers:
+  - name: payments
+    image: nginx:1.27-alpine
+    ports:
+    - containerPort: 80
+  serviceAccountName: default
+  nodeName: kube-explorer-worker
+status:
+  phase: Running
+  podIP: 10.244.1.11
+  containerStatuses:
+  - name: payments
+    image: nginx:1.27-alpine
+    state:
+      running:
+        startedAt: '2026-09-28T09:14:09Z'
+    lastState: {}
+    ready: true
+    started: true
+    restartCount: 0
+  conditions:
+  - type: PodScheduled
+    status: 'True'
+  - type: Initialized
+    status: 'True'
+  - type: ContainersReady
+    status: 'True'
+  - type: Ready
+    status: 'True'
+---
+apiVersion: v1
+kind: Event
+metadata:
+  name: payments.577mt4hxdp6c
+  namespace: fault-netpol-blocks-dns
+involvedObject:
+  kind: Deployment
+  name: payments
+  namespace: fault-netpol-blocks-dns
+type: Normal
+reason: ScalingReplicaSet
+message: Scaled up replica set payments-cqq6r82xw to 1
+count: 1
+firstTimestamp: '2026-09-28T09:14:02Z'
+lastTimestamp: '2026-09-28T09:14:09Z'
+---
+apiVersion: v1
+kind: Event
+metadata:
+  name: payments-cqq6r82xw.zh5pm8bztrqq
+  namespace: fault-netpol-blocks-dns
+involvedObject:
+  kind: ReplicaSet
+  name: payments-cqq6r82xw
+  namespace: fault-netpol-blocks-dns
+type: Normal
+reason: SuccessfulCreate
+message: 'Created pod: payments-cqq6r82xw-lhsqt'
+count: 1
+firstTimestamp: '2026-09-28T09:14:02Z'
+lastTimestamp: '2026-09-28T09:14:09Z'
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: payments
+  namespace: fault-netpol-blocks-dns
+spec:
+  selector:
+    app: payments
+  ports:
+  - port: 80
+    targetPort: 80
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: checkout-egress
+  namespace: fault-netpol-blocks-dns
+spec:
+  podSelector:
+    matchLabels:
+      app: checkout
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    - podSelector:
+        matchLabels:
+          app: payments
+    ports:
+    - protocol: TCP
+      port: 80
+---
+apiVersion: v1
+kind: Endpoints
+metadata:
+  name: payments
+  namespace: fault-netpol-blocks-dns
+subsets:
+- ports:
+  - port: 80
+  addresses:
+  - ip: 10.244.1.11
+    targetRef:
+      kind: Pod
+      name: payments-cqq6r82xw-lhsqt
+---
+apiVersion: v1
+kind: Node
+metadata:
+  name: kube-explorer-control-plane
+  labels:
+    kubernetes.io/hostname: kube-explorer-control-plane
+    kubernetes.io/os: linux
+    node-role.kubernetes.io/control-plane: ''
+spec:
+  taints:
+  - key: node-role.kubernetes.io/control-plane
+    effect: NoSchedule
+status:
+  allocatable:
+    cpu: '8'
+    memory: 16304520Ki
+    pods: '110'
+  conditions:
+  - type: Ready
+    status: 'True'
+    reason: KubeletReady
+---
+apiVersion: v1
+kind: Node
+metadata:
+  name: kube-explorer-worker
+  labels:
+    kubernetes.io/hostname: kube-explorer-worker
+    kubernetes.io/os: linux
+spec: {}
+status:
+  allocatable:
+    cpu: '8'
+    memory: 16304520Ki
+    pods: '110'
+  conditions:
+  - type: Ready
+    status: 'True'
+    reason: KubeletReady
+---
+apiVersion: v1
+kind: Node
+metadata:
+  name: kube-explorer-worker2
+  labels:
+    kubernetes.io/hostname: kube-explorer-worker2
+    kubernetes.io/os: linux
+    dedicated: batch
+spec:
+  taints:
+  - key: dedicated
+    value: batch
+    effect: NoSchedule
+status:
+  allocatable:
+    cpu: '8'
+    memory: 16304520Ki
+    pods: '110'
+  conditions:
+  - type: Ready
+    status: 'True'
+    reason: KubeletReady

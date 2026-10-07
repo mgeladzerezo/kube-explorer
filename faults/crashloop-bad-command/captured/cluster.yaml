@@ -1,0 +1,249 @@
+# Synthesized by faults/tools/synthesize_captures.py; not a recording of a live cluster.
+apiVersion: v1
+kind: Event
+metadata:
+  name: notifier-h7q4kq8b6-jw69d.5ns7g4tlbkbn
+  namespace: fault-crashloop-bad-command
+involvedObject:
+  kind: Pod
+  name: notifier-h7q4kq8b6-jw69d
+  namespace: fault-crashloop-bad-command
+type: Normal
+reason: Scheduled
+message: Successfully assigned fault-crashloop-bad-command/notifier-h7q4kq8b6-jw69d to kube-explorer-worker
+count: 1
+firstTimestamp: '2026-09-28T09:14:02Z'
+lastTimestamp: '2026-09-28T09:14:09Z'
+---
+apiVersion: v1
+kind: Event
+metadata:
+  name: notifier-h7q4kq8b6-jw69d.cblbvskmrpwg
+  namespace: fault-crashloop-bad-command
+involvedObject:
+  kind: Pod
+  name: notifier-h7q4kq8b6-jw69d
+  namespace: fault-crashloop-bad-command
+type: Warning
+reason: Failed
+message: 'Error: failed to create containerd task: failed to create shim task: OCI runtime create failed: runc create failed: unable to start container process: exec: "/usr/local/bin/notifier": stat /usr/local/bin/notifier: no such file or directory: unknown'
+count: 8
+firstTimestamp: '2026-09-28T09:14:02Z'
+lastTimestamp: '2026-09-28T09:21:40Z'
+---
+apiVersion: v1
+kind: Event
+metadata:
+  name: notifier-h7q4kq8b6-jw69d.6c74hpwmxjmc
+  namespace: fault-crashloop-bad-command
+involvedObject:
+  kind: Pod
+  name: notifier-h7q4kq8b6-jw69d
+  namespace: fault-crashloop-bad-command
+type: Warning
+reason: BackOff
+message: Back-off restarting failed container notifier
+count: 31
+firstTimestamp: '2026-09-28T09:14:02Z'
+lastTimestamp: '2026-09-28T09:21:40Z'
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: notifier
+  namespace: fault-crashloop-bad-command
+  creationTimestamp: '2026-09-28T09:14:02Z'
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: notifier
+  template:
+    metadata:
+      labels:
+        app: notifier
+    spec:
+      containers:
+      - name: notifier
+        image: busybox:1.36
+        command:
+        - /usr/local/bin/notifier
+        args:
+        - --listen
+        - :8080
+status:
+  replicas: 1
+  updatedReplicas: 1
+  readyReplicas: 0
+  unavailableReplicas: 1
+  conditions:
+  - type: Available
+    status: 'False'
+    reason: MinimumReplicasUnavailable
+  - type: Progressing
+    status: 'True'
+    reason: ReplicaSetUpdated
+---
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: notifier-h7q4kq8b6
+  namespace: fault-crashloop-bad-command
+  ownerReferences:
+  - apiVersion: apps/v1
+    kind: Deployment
+    name: notifier
+spec:
+  replicas: 1
+status:
+  replicas: 1
+  readyReplicas: 0
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: notifier-h7q4kq8b6-jw69d
+  namespace: fault-crashloop-bad-command
+  labels:
+    app: notifier
+    pod-template-hash: h7q4kq8b6
+  ownerReferences:
+  - apiVersion: apps/v1
+    kind: ReplicaSet
+    name: notifier-h7q4kq8b6
+  creationTimestamp: '2026-09-28T09:14:02Z'
+spec:
+  containers:
+  - name: notifier
+    image: busybox:1.36
+    command:
+    - /usr/local/bin/notifier
+    args:
+    - --listen
+    - :8080
+  serviceAccountName: default
+  nodeName: kube-explorer-worker
+status:
+  phase: Running
+  podIP: 10.244.1.10
+  containerStatuses:
+  - name: notifier
+    image: busybox:1.36
+    state:
+      waiting:
+        reason: CrashLoopBackOff
+        message: back-off 2m40s restarting failed container=notifier
+    lastState:
+      terminated:
+        reason: StartError
+        exitCode: 128
+        startedAt: '2026-09-28T09:18:51Z'
+        finishedAt: '2026-09-28T09:18:53Z'
+        message: 'failed to create containerd task: failed to create shim task: OCI runtime create failed: runc create failed: unable to start container process: exec: "/usr/local/bin/notifier": stat /usr/local/bin/notifier: no such file or directory: unknown'
+    ready: false
+    started: false
+    restartCount: 7
+  conditions:
+  - type: PodScheduled
+    status: 'True'
+  - type: Initialized
+    status: 'True'
+  - type: ContainersReady
+    status: 'False'
+  - type: Ready
+    status: 'False'
+---
+apiVersion: v1
+kind: Event
+metadata:
+  name: notifier.strf6xbd9rhh
+  namespace: fault-crashloop-bad-command
+involvedObject:
+  kind: Deployment
+  name: notifier
+  namespace: fault-crashloop-bad-command
+type: Normal
+reason: ScalingReplicaSet
+message: Scaled up replica set notifier-h7q4kq8b6 to 1
+count: 1
+firstTimestamp: '2026-09-28T09:14:02Z'
+lastTimestamp: '2026-09-28T09:14:09Z'
+---
+apiVersion: v1
+kind: Event
+metadata:
+  name: notifier-h7q4kq8b6.kpqxjgrvxt5c
+  namespace: fault-crashloop-bad-command
+involvedObject:
+  kind: ReplicaSet
+  name: notifier-h7q4kq8b6
+  namespace: fault-crashloop-bad-command
+type: Normal
+reason: SuccessfulCreate
+message: 'Created pod: notifier-h7q4kq8b6-jw69d'
+count: 1
+firstTimestamp: '2026-09-28T09:14:02Z'
+lastTimestamp: '2026-09-28T09:14:09Z'
+---
+apiVersion: v1
+kind: Node
+metadata:
+  name: kube-explorer-control-plane
+  labels:
+    kubernetes.io/hostname: kube-explorer-control-plane
+    kubernetes.io/os: linux
+    node-role.kubernetes.io/control-plane: ''
+spec:
+  taints:
+  - key: node-role.kubernetes.io/control-plane
+    effect: NoSchedule
+status:
+  allocatable:
+    cpu: '8'
+    memory: 16304520Ki
+    pods: '110'
+  conditions:
+  - type: Ready
+    status: 'True'
+    reason: KubeletReady
+---
+apiVersion: v1
+kind: Node
+metadata:
+  name: kube-explorer-worker
+  labels:
+    kubernetes.io/hostname: kube-explorer-worker
+    kubernetes.io/os: linux
+spec: {}
+status:
+  allocatable:
+    cpu: '8'
+    memory: 16304520Ki
+    pods: '110'
+  conditions:
+  - type: Ready
+    status: 'True'
+    reason: KubeletReady
+---
+apiVersion: v1
+kind: Node
+metadata:
+  name: kube-explorer-worker2
+  labels:
+    kubernetes.io/hostname: kube-explorer-worker2
+    kubernetes.io/os: linux
+    dedicated: batch
+spec:
+  taints:
+  - key: dedicated
+    value: batch
+    effect: NoSchedule
+status:
+  allocatable:
+    cpu: '8'
+    memory: 16304520Ki
+    pods: '110'
+  conditions:
+  - type: Ready
+    status: 'True'
+    reason: KubeletReady

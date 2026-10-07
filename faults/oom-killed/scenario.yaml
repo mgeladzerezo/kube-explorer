@@ -1,0 +1,13 @@
+id: oom-killed
+title: Container exceeds its memory limit
+description: >
+  The worker keeps allocating memory past its 64Mi limit. The kernel kills it
+  (exit code 137, reason OOMKilled) and the pod ends up in CrashLoopBackOff.
+namespace: fault-oom-killed
+target:
+  kind: Deployment
+  name: report-worker
+expected_category: oom_killed
+expected_signals:
+  - OOMKilled
+  - 64Mi

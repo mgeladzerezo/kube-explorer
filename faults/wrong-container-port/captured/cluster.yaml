@@ -1,0 +1,325 @@
+# Synthesized by faults/tools/synthesize_captures.py; not a recording of a live cluster.
+apiVersion: v1
+kind: Event
+metadata:
+  name: docs-zpjd4gjjr-x4hcc.29qvt6hzxsm5
+  namespace: fault-wrong-container-port
+involvedObject:
+  kind: Pod
+  name: docs-zpjd4gjjr-x4hcc
+  namespace: fault-wrong-container-port
+type: Normal
+reason: Scheduled
+message: Successfully assigned fault-wrong-container-port/docs-zpjd4gjjr-x4hcc to kube-explorer-worker
+count: 1
+firstTimestamp: '2026-09-28T09:14:02Z'
+lastTimestamp: '2026-09-28T09:14:09Z'
+---
+apiVersion: v1
+kind: Event
+metadata:
+  name: docs-zpjd4gjjr-4wpfw.hht9bqt7kzcd
+  namespace: fault-wrong-container-port
+involvedObject:
+  kind: Pod
+  name: docs-zpjd4gjjr-4wpfw
+  namespace: fault-wrong-container-port
+type: Normal
+reason: Scheduled
+message: Successfully assigned fault-wrong-container-port/docs-zpjd4gjjr-4wpfw to kube-explorer-worker
+count: 1
+firstTimestamp: '2026-09-28T09:14:02Z'
+lastTimestamp: '2026-09-28T09:14:09Z'
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: docs
+  namespace: fault-wrong-container-port
+  creationTimestamp: '2026-09-28T09:14:02Z'
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: docs
+  template:
+    metadata:
+      labels:
+        app: docs
+    spec:
+      containers:
+      - name: docs
+        image: nginx:1.27-alpine
+        ports:
+        - name: http
+          containerPort: 80
+        readinessProbe:
+          httpGet:
+            path: /
+            port: http
+status:
+  replicas: 2
+  updatedReplicas: 2
+  readyReplicas: 2
+  unavailableReplicas: 0
+  conditions:
+  - type: Available
+    status: 'True'
+    reason: MinimumReplicasAvailable
+  - type: Progressing
+    status: 'True'
+    reason: ReplicaSetUpdated
+---
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: docs-zpjd4gjjr
+  namespace: fault-wrong-container-port
+  ownerReferences:
+  - apiVersion: apps/v1
+    kind: Deployment
+    name: docs
+spec:
+  replicas: 2
+status:
+  replicas: 2
+  readyReplicas: 2
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: docs-zpjd4gjjr-x4hcc
+  namespace: fault-wrong-container-port
+  labels:
+    app: docs
+    pod-template-hash: zpjd4gjjr
+  ownerReferences:
+  - apiVersion: apps/v1
+    kind: ReplicaSet
+    name: docs-zpjd4gjjr
+  creationTimestamp: '2026-09-28T09:14:02Z'
+spec:
+  containers:
+  - name: docs
+    image: nginx:1.27-alpine
+    ports:
+    - name: http
+      containerPort: 80
+    readinessProbe:
+      httpGet:
+        path: /
+        port: http
+  serviceAccountName: default
+  nodeName: kube-explorer-worker
+status:
+  phase: Running
+  podIP: 10.244.1.10
+  containerStatuses:
+  - name: docs
+    image: nginx:1.27-alpine
+    state:
+      running:
+        startedAt: '2026-09-28T09:14:09Z'
+    lastState: {}
+    ready: true
+    started: true
+    restartCount: 0
+  conditions:
+  - type: PodScheduled
+    status: 'True'
+  - type: Initialized
+    status: 'True'
+  - type: ContainersReady
+    status: 'True'
+  - type: Ready
+    status: 'True'
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: docs-zpjd4gjjr-4wpfw
+  namespace: fault-wrong-container-port
+  labels:
+    app: docs
+    pod-template-hash: zpjd4gjjr
+  ownerReferences:
+  - apiVersion: apps/v1
+    kind: ReplicaSet
+    name: docs-zpjd4gjjr
+  creationTimestamp: '2026-09-28T09:14:02Z'
+spec:
+  containers:
+  - name: docs
+    image: nginx:1.27-alpine
+    ports:
+    - name: http
+      containerPort: 80
+    readinessProbe:
+      httpGet:
+        path: /
+        port: http
+  serviceAccountName: default
+  nodeName: kube-explorer-worker
+status:
+  phase: Running
+  podIP: 10.244.1.11
+  containerStatuses:
+  - name: docs
+    image: nginx:1.27-alpine
+    state:
+      running:
+        startedAt: '2026-09-28T09:14:09Z'
+    lastState: {}
+    ready: true
+    started: true
+    restartCount: 0
+  conditions:
+  - type: PodScheduled
+    status: 'True'
+  - type: Initialized
+    status: 'True'
+  - type: ContainersReady
+    status: 'True'
+  - type: Ready
+    status: 'True'
+---
+apiVersion: v1
+kind: Event
+metadata:
+  name: docs.tltztsnktjmc
+  namespace: fault-wrong-container-port
+involvedObject:
+  kind: Deployment
+  name: docs
+  namespace: fault-wrong-container-port
+type: Normal
+reason: ScalingReplicaSet
+message: Scaled up replica set docs-zpjd4gjjr to 2
+count: 1
+firstTimestamp: '2026-09-28T09:14:02Z'
+lastTimestamp: '2026-09-28T09:14:09Z'
+---
+apiVersion: v1
+kind: Event
+metadata:
+  name: docs-zpjd4gjjr.gxdqj7z7pt4r
+  namespace: fault-wrong-container-port
+involvedObject:
+  kind: ReplicaSet
+  name: docs-zpjd4gjjr
+  namespace: fault-wrong-container-port
+type: Normal
+reason: SuccessfulCreate
+message: 'Created pod: docs-zpjd4gjjr-x4hcc'
+count: 1
+firstTimestamp: '2026-09-28T09:14:02Z'
+lastTimestamp: '2026-09-28T09:14:09Z'
+---
+apiVersion: v1
+kind: Event
+metadata:
+  name: docs-zpjd4gjjr.mscflld4k8bh
+  namespace: fault-wrong-container-port
+involvedObject:
+  kind: ReplicaSet
+  name: docs-zpjd4gjjr
+  namespace: fault-wrong-container-port
+type: Normal
+reason: SuccessfulCreate
+message: 'Created pod: docs-zpjd4gjjr-4wpfw'
+count: 1
+firstTimestamp: '2026-09-28T09:14:02Z'
+lastTimestamp: '2026-09-28T09:14:09Z'
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: docs
+  namespace: fault-wrong-container-port
+spec:
+  selector:
+    app: docs
+  ports:
+  - port: 80
+    targetPort: 8080
+---
+apiVersion: v1
+kind: Endpoints
+metadata:
+  name: docs
+  namespace: fault-wrong-container-port
+subsets:
+- ports:
+  - port: 8080
+  addresses:
+  - ip: 10.244.1.10
+    targetRef:
+      kind: Pod
+      name: docs-zpjd4gjjr-x4hcc
+  - ip: 10.244.1.11
+    targetRef:
+      kind: Pod
+      name: docs-zpjd4gjjr-4wpfw
+---
+apiVersion: v1
+kind: Node
+metadata:
+  name: kube-explorer-control-plane
+  labels:
+    kubernetes.io/hostname: kube-explorer-control-plane
+    kubernetes.io/os: linux
+    node-role.kubernetes.io/control-plane: ''
+spec:
+  taints:
+  - key: node-role.kubernetes.io/control-plane
+    effect: NoSchedule
+status:
+  allocatable:
+    cpu: '8'
+    memory: 16304520Ki
+    pods: '110'
+  conditions:
+  - type: Ready
+    status: 'True'
+    reason: KubeletReady
+---
+apiVersion: v1
+kind: Node
+metadata:
+  name: kube-explorer-worker
+  labels:
+    kubernetes.io/hostname: kube-explorer-worker
+    kubernetes.io/os: linux
+spec: {}
+status:
+  allocatable:
+    cpu: '8'
+    memory: 16304520Ki
+    pods: '110'
+  conditions:
+  - type: Ready
+    status: 'True'
+    reason: KubeletReady
+---
+apiVersion: v1
+kind: Node
+metadata:
+  name: kube-explorer-worker2
+  labels:
+    kubernetes.io/hostname: kube-explorer-worker2
+    kubernetes.io/os: linux
+    dedicated: batch
+spec:
+  taints:
+  - key: dedicated
+    value: batch
+    effect: NoSchedule
+status:
+  allocatable:
+    cpu: '8'
+    memory: 16304520Ki
+    pods: '110'
+  conditions:
+  - type: Ready
+    status: 'True'
+    reason: KubeletReady

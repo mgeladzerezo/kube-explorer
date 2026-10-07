@@ -1,0 +1,13 @@
+id: read-only-rootfs
+title: Process cannot write to a read-only root filesystem
+description: >
+  readOnlyRootFilesystem is enabled but nginx needs to create cache directories under
+  /var/cache/nginx at startup. It fails with "Read-only file system" and exits.
+namespace: fault-read-only-rootfs
+target:
+  kind: Deployment
+  name: assets
+expected_category: filesystem_permission
+expected_signals:
+  - "Read-only file system"
+  - readOnlyRootFilesystem

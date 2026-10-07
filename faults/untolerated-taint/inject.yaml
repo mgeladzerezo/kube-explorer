@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: fault-untolerated-taint
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nightly-batch
+  namespace: fault-untolerated-taint
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nightly-batch
+  template:
+    metadata:
+      labels:
+        app: nightly-batch
+    spec:
+      # The kind config labels and taints one worker with dedicated=batch.
+      nodeSelector:
+        dedicated: batch
+      containers:
+        - name: batch
+          image: busybox:1.36
+          command: ["sh", "-c", "echo processing batch; sleep 86400"]

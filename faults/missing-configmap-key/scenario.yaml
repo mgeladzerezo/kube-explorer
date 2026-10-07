@@ -1,0 +1,13 @@
+id: missing-configmap-key
+title: Env var references a key missing from the ConfigMap
+description: >
+  The container reads APP_MODE from ConfigMap app-config, which exists but has no
+  such key. The kubelet cannot build the container config (CreateContainerConfigError).
+namespace: fault-missing-configmap-key
+target:
+  kind: Deployment
+  name: orders
+expected_category: missing_config_key
+expected_signals:
+  - "couldn't find key APP_MODE"
+  - CreateContainerConfigError

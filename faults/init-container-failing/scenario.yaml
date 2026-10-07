@@ -1,0 +1,13 @@
+id: init-container-failing
+title: Init container exits non-zero
+description: >
+  The migrate init container expects a migration file that is not in the image and
+  exits 1. The main container never starts (Init:CrashLoopBackOff).
+namespace: fault-init-container-failing
+target:
+  kind: Deployment
+  name: inventory
+expected_category: init_container_failure
+expected_signals:
+  - "Init:CrashLoopBackOff"
+  - "0001_init.sql is missing"

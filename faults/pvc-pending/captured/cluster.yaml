@@ -1,0 +1,230 @@
+# Synthesized by faults/tools/synthesize_captures.py; not a recording of a live cluster.
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: uploads
+  namespace: fault-pvc-pending
+spec:
+  accessModes:
+  - ReadWriteOnce
+  storageClassName: fast-ssd
+  resources:
+    requests:
+      storage: 1Gi
+status:
+  phase: Pending
+---
+apiVersion: v1
+kind: Event
+metadata:
+  name: media-fgtxphtlc-mmd42.62z5dkwk5kdb
+  namespace: fault-pvc-pending
+involvedObject:
+  kind: Pod
+  name: media-fgtxphtlc-mmd42
+  namespace: fault-pvc-pending
+type: Warning
+reason: FailedScheduling
+message: '0/3 nodes are available: pod has unbound immediate PersistentVolumeClaims. preemption: 0/3 nodes are available: 3 Preemption is not helpful for scheduling.'
+count: 9
+firstTimestamp: '2026-09-28T09:14:02Z'
+lastTimestamp: '2026-09-28T09:21:40Z'
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: media
+  namespace: fault-pvc-pending
+  creationTimestamp: '2026-09-28T09:14:02Z'
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: media
+  template:
+    metadata:
+      labels:
+        app: media
+    spec:
+      containers:
+      - name: media
+        image: nginx:1.27-alpine
+        volumeMounts:
+        - name: uploads
+          mountPath: /usr/share/nginx/html/uploads
+      volumes:
+      - name: uploads
+        persistentVolumeClaim:
+          claimName: uploads
+status:
+  replicas: 1
+  updatedReplicas: 1
+  readyReplicas: 1
+  unavailableReplicas: 0
+  conditions:
+  - type: Available
+    status: 'True'
+    reason: MinimumReplicasAvailable
+  - type: Progressing
+    status: 'True'
+    reason: ReplicaSetUpdated
+---
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: media-fgtxphtlc
+  namespace: fault-pvc-pending
+  ownerReferences:
+  - apiVersion: apps/v1
+    kind: Deployment
+    name: media
+spec:
+  replicas: 1
+status:
+  replicas: 1
+  readyReplicas: 1
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: media-fgtxphtlc-mmd42
+  namespace: fault-pvc-pending
+  labels:
+    app: media
+    pod-template-hash: fgtxphtlc
+  ownerReferences:
+  - apiVersion: apps/v1
+    kind: ReplicaSet
+    name: media-fgtxphtlc
+  creationTimestamp: '2026-09-28T09:14:02Z'
+spec:
+  containers:
+  - name: media
+    image: nginx:1.27-alpine
+    volumeMounts:
+    - name: uploads
+      mountPath: /usr/share/nginx/html/uploads
+  volumes:
+  - name: uploads
+    persistentVolumeClaim:
+      claimName: uploads
+  serviceAccountName: default
+status:
+  phase: Pending
+  conditions:
+  - type: PodScheduled
+    status: 'False'
+    reason: Unschedulable
+    message: '0/3 nodes are available: pod has unbound immediate PersistentVolumeClaims. preemption: 0/3 nodes are available: 3 Preemption is not helpful for scheduling.'
+  containerStatuses: []
+---
+apiVersion: v1
+kind: Event
+metadata:
+  name: media.bh2mgclpwmqz
+  namespace: fault-pvc-pending
+involvedObject:
+  kind: Deployment
+  name: media
+  namespace: fault-pvc-pending
+type: Normal
+reason: ScalingReplicaSet
+message: Scaled up replica set media-fgtxphtlc to 1
+count: 1
+firstTimestamp: '2026-09-28T09:14:02Z'
+lastTimestamp: '2026-09-28T09:14:09Z'
+---
+apiVersion: v1
+kind: Event
+metadata:
+  name: media-fgtxphtlc.s56qwfph94w4
+  namespace: fault-pvc-pending
+involvedObject:
+  kind: ReplicaSet
+  name: media-fgtxphtlc
+  namespace: fault-pvc-pending
+type: Normal
+reason: SuccessfulCreate
+message: 'Created pod: media-fgtxphtlc-mmd42'
+count: 1
+firstTimestamp: '2026-09-28T09:14:02Z'
+lastTimestamp: '2026-09-28T09:14:09Z'
+---
+apiVersion: v1
+kind: Event
+metadata:
+  name: uploads.zf4gqlztbl6j
+  namespace: fault-pvc-pending
+involvedObject:
+  kind: PersistentVolumeClaim
+  name: uploads
+  namespace: fault-pvc-pending
+type: Warning
+reason: ProvisioningFailed
+message: storageclass.storage.k8s.io "fast-ssd" not found
+count: 30
+firstTimestamp: '2026-09-28T09:14:02Z'
+lastTimestamp: '2026-09-28T09:21:40Z'
+---
+apiVersion: v1
+kind: Node
+metadata:
+  name: kube-explorer-control-plane
+  labels:
+    kubernetes.io/hostname: kube-explorer-control-plane
+    kubernetes.io/os: linux
+    node-role.kubernetes.io/control-plane: ''
+spec:
+  taints:
+  - key: node-role.kubernetes.io/control-plane
+    effect: NoSchedule
+status:
+  allocatable:
+    cpu: '8'
+    memory: 16304520Ki
+    pods: '110'
+  conditions:
+  - type: Ready
+    status: 'True'
+    reason: KubeletReady
+---
+apiVersion: v1
+kind: Node
+metadata:
+  name: kube-explorer-worker
+  labels:
+    kubernetes.io/hostname: kube-explorer-worker
+    kubernetes.io/os: linux
+spec: {}
+status:
+  allocatable:
+    cpu: '8'
+    memory: 16304520Ki
+    pods: '110'
+  conditions:
+  - type: Ready
+    status: 'True'
+    reason: KubeletReady
+---
+apiVersion: v1
+kind: Node
+metadata:
+  name: kube-explorer-worker2
+  labels:
+    kubernetes.io/hostname: kube-explorer-worker2
+    kubernetes.io/os: linux
+    dedicated: batch
+spec:
+  taints:
+  - key: dedicated
+    value: batch
+    effect: NoSchedule
+status:
+  allocatable:
+    cpu: '8'
+    memory: 16304520Ki
+    pods: '110'
+  conditions:
+  - type: Ready
+    status: 'True'
+    reason: KubeletReady

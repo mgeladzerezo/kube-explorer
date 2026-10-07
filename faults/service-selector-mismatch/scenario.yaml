@@ -1,0 +1,12 @@
+id: service-selector-mismatch
+title: Service selector matches no pods
+description: >
+  The Service selects app=web-frontend but the Deployment labels its pods app=web,
+  so the Service has no endpoints and requests to it fail while every pod is healthy.
+namespace: fault-service-selector-mismatch
+target:
+  kind: Deployment
+  name: web
+expected_category: service_selector_mismatch
+expected_signals:
+  - web-frontend

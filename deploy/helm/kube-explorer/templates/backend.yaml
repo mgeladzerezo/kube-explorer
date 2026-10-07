@@ -1,0 +1,71 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "kube-explorer.name" . }}-backend
+  labels:
+    {{- include "kube-explorer.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.backend.replicas }}
+  selector:
+    matchLabels:
+      {{- include "kube-explorer.selector" (dict "Release" .Release "component" "backend") | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "kube-explorer.selector" (dict "Release" .Release "component" "backend") | nindent 8 }}
+    spec:
+      serviceAccountName: {{ include "kube-explorer.name" . }}
+      securityContext:
+        runAsUser: 10001
+        runAsGroup: 10001
+      containers:
+        - name: backend
+          image: {{ include "kube-explorer.backendImage" . }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 8000
+          env:
+            {{- include "kube-explorer.backendEnv" . | nindent 12 }}
+            - name: ANTHROPIC_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.secret.name }}
+                  key: ANTHROPIC_API_KEY
+                  # Not needed when LLM_MODE=fake.
+                  optional: true
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: http
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            periodSeconds: 20
+          resources:
+            {{- toYaml .Values.backend.resources | nindent 12 }}
+          securityContext:
+            {{- include "kube-explorer.containerSecurity" . | nindent 12 }}
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        - name: tmp
+          emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "kube-explorer.name" . }}-backend
+  labels:
+    {{- include "kube-explorer.labels" . | nindent 4 }}
+    app.kubernetes.io/component: backend
+spec:
+  selector:
+    {{- include "kube-explorer.selector" (dict "Release" .Release "component" "backend") | nindent 4 }}
+  ports:
+    - name: http
+      port: 8000
+      targetPort: http

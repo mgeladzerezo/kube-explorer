@@ -1,0 +1,2 @@
+running migrations against postgres://inventory:Tr0ub4dor-inventory@inventory-db:5432/inventory
+migrate: /migrations/0001_init.sql is missing from the image

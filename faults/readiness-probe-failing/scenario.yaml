@@ -1,0 +1,13 @@
+id: readiness-probe-failing
+title: Readiness probe requests a path the app does not serve
+description: >
+  The readiness probe calls /healthz, which nginx answers with 404. The containers
+  run but never become Ready, so the Service has only not-ready endpoints.
+namespace: fault-readiness-probe-failing
+target:
+  kind: Deployment
+  name: storefront
+expected_category: readiness_probe_failing
+expected_signals:
+  - "Readiness probe failed"
+  - "404"

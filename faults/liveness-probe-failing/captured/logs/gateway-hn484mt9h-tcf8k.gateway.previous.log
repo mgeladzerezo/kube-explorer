@@ -1,0 +1,6 @@
+/docker-entrypoint.sh: Configuration complete; ready for start up
+2026/09/28 09:14:09 [notice] 1#1: using the "epoll" event method
+2026/09/28 09:14:09 [notice] 1#1: nginx/1.27.2
+2026/09/28 09:14:09 [notice] 1#1: start worker processes
+2026/09/28 09:18:52 [notice] 1#1: signal 3 (SIGQUIT) received, shutting down
+2026/09/28 09:18:52 [notice] 1#1: exit

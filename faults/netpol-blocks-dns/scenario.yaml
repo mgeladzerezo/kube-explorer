@@ -1,0 +1,13 @@
+id: netpol-blocks-dns
+title: Egress NetworkPolicy does not allow DNS
+description: >
+  The egress policy for checkout allows TCP 80 to payments only. DNS to kube-dns on
+  port 53 is dropped, so the service name never resolves and every request fails.
+namespace: fault-netpol-blocks-dns
+target:
+  kind: Deployment
+  name: checkout
+expected_category: network_policy_blocking
+expected_signals:
+  - checkout-egress
+  - "bad address"

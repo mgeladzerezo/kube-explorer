@@ -1,0 +1,13 @@
+id: unschedulable-resources
+title: Memory request larger than any node
+description: >
+  The pod requests 64Gi of memory. No node has that much allocatable, so the
+  scheduler leaves the pod Pending with "Insufficient memory".
+namespace: fault-unschedulable-resources
+target:
+  kind: Deployment
+  name: analytics
+expected_category: insufficient_resources
+expected_signals:
+  - "Insufficient memory"
+  - 64Gi

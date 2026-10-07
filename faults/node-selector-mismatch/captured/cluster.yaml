@@ -1,0 +1,189 @@
+# Synthesized by faults/tools/synthesize_captures.py; not a recording of a live cluster.
+apiVersion: v1
+kind: Event
+metadata:
+  name: search-kc26tjl2p-swpqw.79k7hjtjbfbj
+  namespace: fault-node-selector-mismatch
+involvedObject:
+  kind: Pod
+  name: search-kc26tjl2p-swpqw
+  namespace: fault-node-selector-mismatch
+type: Warning
+reason: FailedScheduling
+message: '0/3 nodes are available: 1 node(s) didn''t match Pod''s node affinity/selector, 1 node(s) had untolerated taint {dedicated: batch}, 1 node(s) had untolerated taint {node-role.kubernetes.io/control-plane: }. preemption: 0/3 nodes are available: 3 Preemption is not helpful for scheduling.'
+count: 9
+firstTimestamp: '2026-09-28T09:14:02Z'
+lastTimestamp: '2026-09-28T09:21:40Z'
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: search
+  namespace: fault-node-selector-mismatch
+  creationTimestamp: '2026-09-28T09:14:02Z'
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: search
+  template:
+    metadata:
+      labels:
+        app: search
+    spec:
+      nodeSelector:
+        disktype: ssd
+      containers:
+      - name: search
+        image: nginx:1.27-alpine
+status:
+  replicas: 1
+  updatedReplicas: 1
+  readyReplicas: 1
+  unavailableReplicas: 0
+  conditions:
+  - type: Available
+    status: 'True'
+    reason: MinimumReplicasAvailable
+  - type: Progressing
+    status: 'True'
+    reason: ReplicaSetUpdated
+---
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: search-kc26tjl2p
+  namespace: fault-node-selector-mismatch
+  ownerReferences:
+  - apiVersion: apps/v1
+    kind: Deployment
+    name: search
+spec:
+  replicas: 1
+status:
+  replicas: 1
+  readyReplicas: 1
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: search-kc26tjl2p-swpqw
+  namespace: fault-node-selector-mismatch
+  labels:
+    app: search
+    pod-template-hash: kc26tjl2p
+  ownerReferences:
+  - apiVersion: apps/v1
+    kind: ReplicaSet
+    name: search-kc26tjl2p
+  creationTimestamp: '2026-09-28T09:14:02Z'
+spec:
+  nodeSelector:
+    disktype: ssd
+  containers:
+  - name: search
+    image: nginx:1.27-alpine
+  serviceAccountName: default
+status:
+  phase: Pending
+  conditions:
+  - type: PodScheduled
+    status: 'False'
+    reason: Unschedulable
+    message: '0/3 nodes are available: 1 node(s) didn''t match Pod''s node affinity/selector, 1 node(s) had untolerated taint {dedicated: batch}, 1 node(s) had untolerated taint {node-role.kubernetes.io/control-plane: }. preemption: 0/3 nodes are available: 3 Preemption is not helpful for scheduling.'
+  containerStatuses: []
+---
+apiVersion: v1
+kind: Event
+metadata:
+  name: search.hldsvpb77rm8
+  namespace: fault-node-selector-mismatch
+involvedObject:
+  kind: Deployment
+  name: search
+  namespace: fault-node-selector-mismatch
+type: Normal
+reason: ScalingReplicaSet
+message: Scaled up replica set search-kc26tjl2p to 1
+count: 1
+firstTimestamp: '2026-09-28T09:14:02Z'
+lastTimestamp: '2026-09-28T09:14:09Z'
+---
+apiVersion: v1
+kind: Event
+metadata:
+  name: search-kc26tjl2p.dspntjg2q9mk
+  namespace: fault-node-selector-mismatch
+involvedObject:
+  kind: ReplicaSet
+  name: search-kc26tjl2p
+  namespace: fault-node-selector-mismatch
+type: Normal
+reason: SuccessfulCreate
+message: 'Created pod: search-kc26tjl2p-swpqw'
+count: 1
+firstTimestamp: '2026-09-28T09:14:02Z'
+lastTimestamp: '2026-09-28T09:14:09Z'
+---
+apiVersion: v1
+kind: Node
+metadata:
+  name: kube-explorer-control-plane
+  labels:
+    kubernetes.io/hostname: kube-explorer-control-plane
+    kubernetes.io/os: linux
+    node-role.kubernetes.io/control-plane: ''
+spec:
+  taints:
+  - key: node-role.kubernetes.io/control-plane
+    effect: NoSchedule
+status:
+  allocatable:
+    cpu: '8'
+    memory: 16304520Ki
+    pods: '110'
+  conditions:
+  - type: Ready
+    status: 'True'
+    reason: KubeletReady
+---
+apiVersion: v1
+kind: Node
+metadata:
+  name: kube-explorer-worker
+  labels:
+    kubernetes.io/hostname: kube-explorer-worker
+    kubernetes.io/os: linux
+spec: {}
+status:
+  allocatable:
+    cpu: '8'
+    memory: 16304520Ki
+    pods: '110'
+  conditions:
+  - type: Ready
+    status: 'True'
+    reason: KubeletReady
+---
+apiVersion: v1
+kind: Node
+metadata:
+  name: kube-explorer-worker2
+  labels:
+    kubernetes.io/hostname: kube-explorer-worker2
+    kubernetes.io/os: linux
+    dedicated: batch
+spec:
+  taints:
+  - key: dedicated
+    value: batch
+    effect: NoSchedule
+status:
+  allocatable:
+    cpu: '8'
+    memory: 16304520Ki
+    pods: '110'
+  conditions:
+  - type: Ready
+    status: 'True'
+    reason: KubeletReady

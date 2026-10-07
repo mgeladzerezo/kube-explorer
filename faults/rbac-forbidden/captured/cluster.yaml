@@ -1,0 +1,231 @@
+# Synthesized by faults/tools/synthesize_captures.py; not a recording of a live cluster.
+apiVersion: v1
+kind: Event
+metadata:
+  name: pod-lister-njckqxb7n-fpg8w.2v9mzlb48khj
+  namespace: fault-rbac-forbidden
+involvedObject:
+  kind: Pod
+  name: pod-lister-njckqxb7n-fpg8w
+  namespace: fault-rbac-forbidden
+type: Normal
+reason: Scheduled
+message: Successfully assigned fault-rbac-forbidden/pod-lister-njckqxb7n-fpg8w to kube-explorer-worker
+count: 1
+firstTimestamp: '2026-09-28T09:14:02Z'
+lastTimestamp: '2026-09-28T09:14:09Z'
+---
+apiVersion: v1
+kind: Event
+metadata:
+  name: pod-lister-njckqxb7n-fpg8w.mwqfj6kt8cj8
+  namespace: fault-rbac-forbidden
+involvedObject:
+  kind: Pod
+  name: pod-lister-njckqxb7n-fpg8w
+  namespace: fault-rbac-forbidden
+type: Warning
+reason: BackOff
+message: Back-off restarting failed container lister
+count: 31
+firstTimestamp: '2026-09-28T09:14:02Z'
+lastTimestamp: '2026-09-28T09:21:40Z'
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pod-lister
+  namespace: fault-rbac-forbidden
+  creationTimestamp: '2026-09-28T09:14:02Z'
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pod-lister
+  template:
+    metadata:
+      labels:
+        app: pod-lister
+    spec:
+      serviceAccountName: pod-lister
+      containers:
+      - name: lister
+        image: bitnami/kubectl:1.31
+        command:
+        - sh
+        - -c
+        - kubectl get pods -n fault-rbac-forbidden && sleep 3600
+status:
+  replicas: 1
+  updatedReplicas: 1
+  readyReplicas: 0
+  unavailableReplicas: 1
+  conditions:
+  - type: Available
+    status: 'False'
+    reason: MinimumReplicasUnavailable
+  - type: Progressing
+    status: 'True'
+    reason: ReplicaSetUpdated
+---
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: pod-lister-njckqxb7n
+  namespace: fault-rbac-forbidden
+  ownerReferences:
+  - apiVersion: apps/v1
+    kind: Deployment
+    name: pod-lister
+spec:
+  replicas: 1
+status:
+  replicas: 1
+  readyReplicas: 0
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-lister-njckqxb7n-fpg8w
+  namespace: fault-rbac-forbidden
+  labels:
+    app: pod-lister
+    pod-template-hash: njckqxb7n
+  ownerReferences:
+  - apiVersion: apps/v1
+    kind: ReplicaSet
+    name: pod-lister-njckqxb7n
+  creationTimestamp: '2026-09-28T09:14:02Z'
+spec:
+  serviceAccountName: pod-lister
+  containers:
+  - name: lister
+    image: bitnami/kubectl:1.31
+    command:
+    - sh
+    - -c
+    - kubectl get pods -n fault-rbac-forbidden && sleep 3600
+  nodeName: kube-explorer-worker
+status:
+  phase: Running
+  podIP: 10.244.1.10
+  containerStatuses:
+  - name: lister
+    image: bitnami/kubectl:1.31
+    state:
+      waiting:
+        reason: CrashLoopBackOff
+        message: back-off 2m40s restarting failed container=lister
+    lastState:
+      terminated:
+        reason: Error
+        exitCode: 1
+        startedAt: '2026-09-28T09:18:51Z'
+        finishedAt: '2026-09-28T09:18:53Z'
+    ready: false
+    started: false
+    restartCount: 6
+  conditions:
+  - type: PodScheduled
+    status: 'True'
+  - type: Initialized
+    status: 'True'
+  - type: ContainersReady
+    status: 'False'
+  - type: Ready
+    status: 'False'
+---
+apiVersion: v1
+kind: Event
+metadata:
+  name: pod-lister.z4bltr7kc85p
+  namespace: fault-rbac-forbidden
+involvedObject:
+  kind: Deployment
+  name: pod-lister
+  namespace: fault-rbac-forbidden
+type: Normal
+reason: ScalingReplicaSet
+message: Scaled up replica set pod-lister-njckqxb7n to 1
+count: 1
+firstTimestamp: '2026-09-28T09:14:02Z'
+lastTimestamp: '2026-09-28T09:14:09Z'
+---
+apiVersion: v1
+kind: Event
+metadata:
+  name: pod-lister-njckqxb7n.sxhzklk5k6bw
+  namespace: fault-rbac-forbidden
+involvedObject:
+  kind: ReplicaSet
+  name: pod-lister-njckqxb7n
+  namespace: fault-rbac-forbidden
+type: Normal
+reason: SuccessfulCreate
+message: 'Created pod: pod-lister-njckqxb7n-fpg8w'
+count: 1
+firstTimestamp: '2026-09-28T09:14:02Z'
+lastTimestamp: '2026-09-28T09:14:09Z'
+---
+apiVersion: v1
+kind: Node
+metadata:
+  name: kube-explorer-control-plane
+  labels:
+    kubernetes.io/hostname: kube-explorer-control-plane
+    kubernetes.io/os: linux
+    node-role.kubernetes.io/control-plane: ''
+spec:
+  taints:
+  - key: node-role.kubernetes.io/control-plane
+    effect: NoSchedule
+status:
+  allocatable:
+    cpu: '8'
+    memory: 16304520Ki
+    pods: '110'
+  conditions:
+  - type: Ready
+    status: 'True'
+    reason: KubeletReady
+---
+apiVersion: v1
+kind: Node
+metadata:
+  name: kube-explorer-worker
+  labels:
+    kubernetes.io/hostname: kube-explorer-worker
+    kubernetes.io/os: linux
+spec: {}
+status:
+  allocatable:
+    cpu: '8'
+    memory: 16304520Ki
+    pods: '110'
+  conditions:
+  - type: Ready
+    status: 'True'
+    reason: KubeletReady
+---
+apiVersion: v1
+kind: Node
+metadata:
+  name: kube-explorer-worker2
+  labels:
+    kubernetes.io/hostname: kube-explorer-worker2
+    kubernetes.io/os: linux
+    dedicated: batch
+spec:
+  taints:
+  - key: dedicated
+    value: batch
+    effect: NoSchedule
+status:
+  allocatable:
+    cpu: '8'
+    memory: 16304520Ki
+    pods: '110'
+  conditions:
+  - type: Ready
+    status: 'True'
+    reason: KubeletReady

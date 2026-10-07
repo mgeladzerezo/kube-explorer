@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: fault-read-only-rootfs
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: assets
+  namespace: fault-read-only-rootfs
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: assets
+  template:
+    metadata:
+      labels:
+        app: assets
+    spec:
+      containers:
+        - name: assets
+          image: nginx:1.27-alpine
+          securityContext:
+            readOnlyRootFilesystem: true

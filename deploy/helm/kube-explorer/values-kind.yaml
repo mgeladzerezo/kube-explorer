@@ -1,0 +1,23 @@
+# Overrides for the local kind cluster created by deploy/kind/up.sh.
+image:
+  backend:
+    tag: dev
+  frontend:
+    tag: dev
+  pullPolicy: Never
+
+backend:
+  env:
+    # Set to "anthropic" and add ANTHROPIC_API_KEY to the kube-explorer Secret to use the model.
+    LLM_MODE: fake
+
+secret:
+  externalSecret:
+    enabled: false
+
+networkPolicy:
+  kubeApiServer:
+    cidrs: ["0.0.0.0/0"]
+  database:
+    cidrs: ["10.244.0.0/16"]
+  ingressNamespace: kube-explorer

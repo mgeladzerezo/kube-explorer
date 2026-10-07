@@ -1,0 +1,13 @@
+id: rbac-forbidden
+title: ServiceAccount lacks permission for the API call the app makes
+description: >
+  The app lists pods through the Kubernetes API using ServiceAccount pod-lister, which
+  has no Role bound to it. The API server answers 403 and the process exits.
+namespace: fault-rbac-forbidden
+target:
+  kind: Deployment
+  name: pod-lister
+expected_category: rbac_forbidden
+expected_signals:
+  - 'cannot list resource "pods"'
+  - "system:serviceaccount:fault-rbac-forbidden:pod-lister"

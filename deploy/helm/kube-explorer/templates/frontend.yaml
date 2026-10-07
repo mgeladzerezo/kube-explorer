@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "kube-explorer.name" . }}-frontend
+  labels:
+    {{- include "kube-explorer.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.frontend.replicas }}
+  selector:
+    matchLabels:
+      {{- include "kube-explorer.selector" (dict "Release" .Release "component" "frontend") | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "kube-explorer.selector" (dict "Release" .Release "component" "frontend") | nindent 8 }}
+    spec:
+      automountServiceAccountToken: false
+      containers:
+        - name: frontend
+          image: {{ .Values.image.frontend.repository }}:{{ .Values.image.frontend.tag | default .Chart.AppVersion }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 8080
+          env:
+            - name: BACKEND_URL
+              value: http://{{ include "kube-explorer.name" . }}-backend:8000
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          resources:
+            {{- toYaml .Values.frontend.resources | nindent 12 }}
+          securityContext:
+            {{- include "kube-explorer.containerSecurity" . | nindent 12 }}
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+            - name: nginx-conf
+              mountPath: /etc/nginx/conf.d
+      volumes:
+        - name: tmp
+          emptyDir: {}
+        # The image renders its config template into conf.d at startup.
+        - name: nginx-conf
+          emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "kube-explorer.name" . }}-frontend
+  labels:
+    {{- include "kube-explorer.labels" . | nindent 4 }}
+spec:
+  selector:
+    {{- include "kube-explorer.selector" (dict "Release" .Release "component" "frontend") | nindent 4 }}
+  ports:
+    - name: http
+      port: 80
+      targetPort: http

@@ -1,0 +1,321 @@
+# Synthesized by faults/tools/synthesize_captures.py; not a recording of a live cluster.
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: compute-quota
+  namespace: fault-quota-exceeded
+spec:
+  hard: &id001
+    requests.cpu: 500m
+    requests.memory: 512Mi
+status:
+  hard: *id001
+  used:
+    requests.cpu: 500m
+    requests.memory: 128Mi
+---
+apiVersion: v1
+kind: Event
+metadata:
+  name: api-vc6256t6v-4dlb7.zwnzj897fb5f
+  namespace: fault-quota-exceeded
+involvedObject:
+  kind: Pod
+  name: api-vc6256t6v-4dlb7
+  namespace: fault-quota-exceeded
+type: Normal
+reason: Scheduled
+message: Successfully assigned fault-quota-exceeded/api-vc6256t6v-4dlb7 to kube-explorer-worker
+count: 1
+firstTimestamp: '2026-09-28T09:14:02Z'
+lastTimestamp: '2026-09-28T09:14:09Z'
+---
+apiVersion: v1
+kind: Event
+metadata:
+  name: api-vc6256t6v-8wk8m.vjtqxxqjhn2f
+  namespace: fault-quota-exceeded
+involvedObject:
+  kind: Pod
+  name: api-vc6256t6v-8wk8m
+  namespace: fault-quota-exceeded
+type: Normal
+reason: Scheduled
+message: Successfully assigned fault-quota-exceeded/api-vc6256t6v-8wk8m to kube-explorer-worker
+count: 1
+firstTimestamp: '2026-09-28T09:14:02Z'
+lastTimestamp: '2026-09-28T09:14:09Z'
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api
+  namespace: fault-quota-exceeded
+  creationTimestamp: '2026-09-28T09:14:02Z'
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: api
+  template:
+    metadata:
+      labels:
+        app: api
+    spec:
+      containers:
+      - name: api
+        image: nginx:1.27-alpine
+        resources:
+          requests:
+            cpu: 250m
+            memory: 64Mi
+status:
+  replicas: 2
+  updatedReplicas: 2
+  readyReplicas: 2
+  unavailableReplicas: 2
+  conditions:
+  - type: Available
+    status: 'False'
+    reason: MinimumReplicasUnavailable
+  - type: Progressing
+    status: 'True'
+    reason: ReplicaSetUpdated
+  - type: ReplicaFailure
+    status: 'True'
+    reason: FailedCreate
+    message: 'pods "api-vc6256t6v-" is forbidden: exceeded quota: compute-quota, requested: requests.cpu=250m, used: requests.cpu=500m, limited: requests.cpu=500m'
+---
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: api-vc6256t6v
+  namespace: fault-quota-exceeded
+  ownerReferences:
+  - apiVersion: apps/v1
+    kind: Deployment
+    name: api
+spec:
+  replicas: 4
+status:
+  replicas: 2
+  readyReplicas: 2
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: api-vc6256t6v-4dlb7
+  namespace: fault-quota-exceeded
+  labels:
+    app: api
+    pod-template-hash: vc6256t6v
+  ownerReferences:
+  - apiVersion: apps/v1
+    kind: ReplicaSet
+    name: api-vc6256t6v
+  creationTimestamp: '2026-09-28T09:14:02Z'
+spec:
+  containers:
+  - name: api
+    image: nginx:1.27-alpine
+    resources:
+      requests:
+        cpu: 250m
+        memory: 64Mi
+  serviceAccountName: default
+  nodeName: kube-explorer-worker
+status:
+  phase: Running
+  podIP: 10.244.1.10
+  containerStatuses:
+  - name: api
+    image: nginx:1.27-alpine
+    state:
+      running:
+        startedAt: '2026-09-28T09:14:09Z'
+    lastState: {}
+    ready: true
+    started: true
+    restartCount: 0
+  conditions:
+  - type: PodScheduled
+    status: 'True'
+  - type: Initialized
+    status: 'True'
+  - type: ContainersReady
+    status: 'True'
+  - type: Ready
+    status: 'True'
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: api-vc6256t6v-8wk8m
+  namespace: fault-quota-exceeded
+  labels:
+    app: api
+    pod-template-hash: vc6256t6v
+  ownerReferences:
+  - apiVersion: apps/v1
+    kind: ReplicaSet
+    name: api-vc6256t6v
+  creationTimestamp: '2026-09-28T09:14:02Z'
+spec:
+  containers:
+  - name: api
+    image: nginx:1.27-alpine
+    resources:
+      requests:
+        cpu: 250m
+        memory: 64Mi
+  serviceAccountName: default
+  nodeName: kube-explorer-worker
+status:
+  phase: Running
+  podIP: 10.244.1.11
+  containerStatuses:
+  - name: api
+    image: nginx:1.27-alpine
+    state:
+      running:
+        startedAt: '2026-09-28T09:14:09Z'
+    lastState: {}
+    ready: true
+    started: true
+    restartCount: 0
+  conditions:
+  - type: PodScheduled
+    status: 'True'
+  - type: Initialized
+    status: 'True'
+  - type: ContainersReady
+    status: 'True'
+  - type: Ready
+    status: 'True'
+---
+apiVersion: v1
+kind: Event
+metadata:
+  name: api.wj8lxm2xrxvf
+  namespace: fault-quota-exceeded
+involvedObject:
+  kind: Deployment
+  name: api
+  namespace: fault-quota-exceeded
+type: Normal
+reason: ScalingReplicaSet
+message: Scaled up replica set api-vc6256t6v to 4
+count: 1
+firstTimestamp: '2026-09-28T09:14:02Z'
+lastTimestamp: '2026-09-28T09:14:09Z'
+---
+apiVersion: v1
+kind: Event
+metadata:
+  name: api-vc6256t6v.gqp5ss8hcfjt
+  namespace: fault-quota-exceeded
+involvedObject:
+  kind: ReplicaSet
+  name: api-vc6256t6v
+  namespace: fault-quota-exceeded
+type: Normal
+reason: SuccessfulCreate
+message: 'Created pod: api-vc6256t6v-4dlb7'
+count: 1
+firstTimestamp: '2026-09-28T09:14:02Z'
+lastTimestamp: '2026-09-28T09:14:09Z'
+---
+apiVersion: v1
+kind: Event
+metadata:
+  name: api-vc6256t6v.nm2brphvgnq7
+  namespace: fault-quota-exceeded
+involvedObject:
+  kind: ReplicaSet
+  name: api-vc6256t6v
+  namespace: fault-quota-exceeded
+type: Normal
+reason: SuccessfulCreate
+message: 'Created pod: api-vc6256t6v-8wk8m'
+count: 1
+firstTimestamp: '2026-09-28T09:14:02Z'
+lastTimestamp: '2026-09-28T09:14:09Z'
+---
+apiVersion: v1
+kind: Event
+metadata:
+  name: api-vc6256t6v.9sjtj5f858r7
+  namespace: fault-quota-exceeded
+involvedObject:
+  kind: ReplicaSet
+  name: api-vc6256t6v
+  namespace: fault-quota-exceeded
+type: Warning
+reason: FailedCreate
+message: 'Error creating: pods "api-vc6256t6v-" is forbidden: exceeded quota: compute-quota, requested: requests.cpu=250m, used: requests.cpu=500m, limited: requests.cpu=500m'
+count: 14
+firstTimestamp: '2026-09-28T09:14:02Z'
+lastTimestamp: '2026-09-28T09:21:40Z'
+---
+apiVersion: v1
+kind: Node
+metadata:
+  name: kube-explorer-control-plane
+  labels:
+    kubernetes.io/hostname: kube-explorer-control-plane
+    kubernetes.io/os: linux
+    node-role.kubernetes.io/control-plane: ''
+spec:
+  taints:
+  - key: node-role.kubernetes.io/control-plane
+    effect: NoSchedule
+status:
+  allocatable:
+    cpu: '8'
+    memory: 16304520Ki
+    pods: '110'
+  conditions:
+  - type: Ready
+    status: 'True'
+    reason: KubeletReady
+---
+apiVersion: v1
+kind: Node
+metadata:
+  name: kube-explorer-worker
+  labels:
+    kubernetes.io/hostname: kube-explorer-worker
+    kubernetes.io/os: linux
+spec: {}
+status:
+  allocatable:
+    cpu: '8'
+    memory: 16304520Ki
+    pods: '110'
+  conditions:
+  - type: Ready
+    status: 'True'
+    reason: KubeletReady
+---
+apiVersion: v1
+kind: Node
+metadata:
+  name: kube-explorer-worker2
+  labels:
+    kubernetes.io/hostname: kube-explorer-worker2
+    kubernetes.io/os: linux
+    dedicated: batch
+spec:
+  taints:
+  - key: dedicated
+    value: batch
+    effect: NoSchedule
+status:
+  allocatable:
+    cpu: '8'
+    memory: 16304520Ki
+    pods: '110'
+  conditions:
+  - type: Ready
+    status: 'True'
+    reason: KubeletReady

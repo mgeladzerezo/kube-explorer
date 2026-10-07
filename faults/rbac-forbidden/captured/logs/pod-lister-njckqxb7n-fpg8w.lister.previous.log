@@ -1,0 +1,1 @@
+Error from server (Forbidden): pods is forbidden: User "system:serviceaccount:fault-rbac-forbidden:pod-lister" cannot list resource "pods" in API group "" in the namespace "fault-rbac-forbidden"

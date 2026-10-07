@@ -1,0 +1,233 @@
+# Synthesized by faults/tools/synthesize_captures.py; not a recording of a live cluster.
+apiVersion: v1
+kind: Event
+metadata:
+  name: billing-wrmcxfdj4-qpnpk.8jvhr9qjm2xw
+  namespace: fault-missing-secret
+involvedObject:
+  kind: Pod
+  name: billing-wrmcxfdj4-qpnpk
+  namespace: fault-missing-secret
+type: Normal
+reason: Scheduled
+message: Successfully assigned fault-missing-secret/billing-wrmcxfdj4-qpnpk to kube-explorer-worker
+count: 1
+firstTimestamp: '2026-09-28T09:14:02Z'
+lastTimestamp: '2026-09-28T09:14:09Z'
+---
+apiVersion: v1
+kind: Event
+metadata:
+  name: billing-wrmcxfdj4-qpnpk.bntmdbkmpplt
+  namespace: fault-missing-secret
+involvedObject:
+  kind: Pod
+  name: billing-wrmcxfdj4-qpnpk
+  namespace: fault-missing-secret
+type: Warning
+reason: Failed
+message: 'Error: secret "billing-db-credentials" not found'
+count: 26
+firstTimestamp: '2026-09-28T09:14:02Z'
+lastTimestamp: '2026-09-28T09:21:40Z'
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: billing
+  namespace: fault-missing-secret
+  creationTimestamp: '2026-09-28T09:14:02Z'
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: billing
+  template:
+    metadata:
+      labels:
+        app: billing
+    spec:
+      containers:
+      - name: billing
+        image: nginx:1.27-alpine
+        env:
+        - name: DB_HOST
+          value: billing-db.fault-missing-secret.svc.cluster.local
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: billing-db-credentials
+              key: password
+status:
+  replicas: 1
+  updatedReplicas: 1
+  readyReplicas: 0
+  unavailableReplicas: 1
+  conditions:
+  - type: Available
+    status: 'False'
+    reason: MinimumReplicasUnavailable
+  - type: Progressing
+    status: 'True'
+    reason: ReplicaSetUpdated
+---
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: billing-wrmcxfdj4
+  namespace: fault-missing-secret
+  ownerReferences:
+  - apiVersion: apps/v1
+    kind: Deployment
+    name: billing
+spec:
+  replicas: 1
+status:
+  replicas: 1
+  readyReplicas: 0
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: billing-wrmcxfdj4-qpnpk
+  namespace: fault-missing-secret
+  labels:
+    app: billing
+    pod-template-hash: wrmcxfdj4
+  ownerReferences:
+  - apiVersion: apps/v1
+    kind: ReplicaSet
+    name: billing-wrmcxfdj4
+  creationTimestamp: '2026-09-28T09:14:02Z'
+spec:
+  containers:
+  - name: billing
+    image: nginx:1.27-alpine
+    env:
+    - name: DB_HOST
+      value: billing-db.fault-missing-secret.svc.cluster.local
+    - name: DB_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          name: billing-db-credentials
+          key: password
+  serviceAccountName: default
+  nodeName: kube-explorer-worker
+status:
+  phase: Pending
+  podIP: 10.244.1.10
+  containerStatuses:
+  - name: billing
+    image: nginx:1.27-alpine
+    state:
+      waiting:
+        reason: CreateContainerConfigError
+        message: secret "billing-db-credentials" not found
+    lastState: {}
+    ready: false
+    started: false
+    restartCount: 0
+  conditions:
+  - type: PodScheduled
+    status: 'True'
+  - type: Initialized
+    status: 'True'
+  - type: ContainersReady
+    status: 'False'
+  - type: Ready
+    status: 'False'
+---
+apiVersion: v1
+kind: Event
+metadata:
+  name: billing.8ngvmprwqh6d
+  namespace: fault-missing-secret
+involvedObject:
+  kind: Deployment
+  name: billing
+  namespace: fault-missing-secret
+type: Normal
+reason: ScalingReplicaSet
+message: Scaled up replica set billing-wrmcxfdj4 to 1
+count: 1
+firstTimestamp: '2026-09-28T09:14:02Z'
+lastTimestamp: '2026-09-28T09:14:09Z'
+---
+apiVersion: v1
+kind: Event
+metadata:
+  name: billing-wrmcxfdj4.7n88wdrmx8s6
+  namespace: fault-missing-secret
+involvedObject:
+  kind: ReplicaSet
+  name: billing-wrmcxfdj4
+  namespace: fault-missing-secret
+type: Normal
+reason: SuccessfulCreate
+message: 'Created pod: billing-wrmcxfdj4-qpnpk'
+count: 1
+firstTimestamp: '2026-09-28T09:14:02Z'
+lastTimestamp: '2026-09-28T09:14:09Z'
+---
+apiVersion: v1
+kind: Node
+metadata:
+  name: kube-explorer-control-plane
+  labels:
+    kubernetes.io/hostname: kube-explorer-control-plane
+    kubernetes.io/os: linux
+    node-role.kubernetes.io/control-plane: ''
+spec:
+  taints:
+  - key: node-role.kubernetes.io/control-plane
+    effect: NoSchedule
+status:
+  allocatable:
+    cpu: '8'
+    memory: 16304520Ki
+    pods: '110'
+  conditions:
+  - type: Ready
+    status: 'True'
+    reason: KubeletReady
+---
+apiVersion: v1
+kind: Node
+metadata:
+  name: kube-explorer-worker
+  labels:
+    kubernetes.io/hostname: kube-explorer-worker
+    kubernetes.io/os: linux
+spec: {}
+status:
+  allocatable:
+    cpu: '8'
+    memory: 16304520Ki
+    pods: '110'
+  conditions:
+  - type: Ready
+    status: 'True'
+    reason: KubeletReady
+---
+apiVersion: v1
+kind: Node
+metadata:
+  name: kube-explorer-worker2
+  labels:
+    kubernetes.io/hostname: kube-explorer-worker2
+    kubernetes.io/os: linux
+    dedicated: batch
+spec:
+  taints:
+  - key: dedicated
+    value: batch
+    effect: NoSchedule
+status:
+  allocatable:
+    cpu: '8'
+    memory: 16304520Ki
+    pods: '110'
+  conditions:
+  - type: Ready
+    status: 'True'
+    reason: KubeletReady

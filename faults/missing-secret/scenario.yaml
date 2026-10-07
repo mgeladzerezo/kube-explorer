@@ -1,0 +1,12 @@
+id: missing-secret
+title: Env var references a Secret that does not exist
+description: >
+  DB_PASSWORD comes from Secret billing-db-credentials, which was never created in this
+  namespace. The container cannot be configured (CreateContainerConfigError).
+namespace: fault-missing-secret
+target:
+  kind: Deployment
+  name: billing
+expected_category: missing_secret
+expected_signals:
+  - 'secret "billing-db-credentials" not found'

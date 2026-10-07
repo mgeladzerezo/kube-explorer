@@ -1,0 +1,310 @@
+# Synthesized by faults/tools/synthesize_captures.py; not a recording of a live cluster.
+apiVersion: v1
+kind: Event
+metadata:
+  name: web-krpcskjqv-s4c48.lrx8w5kx6bnr
+  namespace: fault-service-selector-mismatch
+involvedObject:
+  kind: Pod
+  name: web-krpcskjqv-s4c48
+  namespace: fault-service-selector-mismatch
+type: Normal
+reason: Scheduled
+message: Successfully assigned fault-service-selector-mismatch/web-krpcskjqv-s4c48 to kube-explorer-worker
+count: 1
+firstTimestamp: '2026-09-28T09:14:02Z'
+lastTimestamp: '2026-09-28T09:14:09Z'
+---
+apiVersion: v1
+kind: Event
+metadata:
+  name: web-krpcskjqv-27bks.rtshlmfj6pvz
+  namespace: fault-service-selector-mismatch
+involvedObject:
+  kind: Pod
+  name: web-krpcskjqv-27bks
+  namespace: fault-service-selector-mismatch
+type: Normal
+reason: Scheduled
+message: Successfully assigned fault-service-selector-mismatch/web-krpcskjqv-27bks to kube-explorer-worker
+count: 1
+firstTimestamp: '2026-09-28T09:14:02Z'
+lastTimestamp: '2026-09-28T09:14:09Z'
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web
+  namespace: fault-service-selector-mismatch
+  creationTimestamp: '2026-09-28T09:14:02Z'
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: web
+  template:
+    metadata:
+      labels:
+        app: web
+    spec:
+      containers:
+      - name: web
+        image: nginx:1.27-alpine
+        ports:
+        - containerPort: 80
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 80
+status:
+  replicas: 2
+  updatedReplicas: 2
+  readyReplicas: 2
+  unavailableReplicas: 0
+  conditions:
+  - type: Available
+    status: 'True'
+    reason: MinimumReplicasAvailable
+  - type: Progressing
+    status: 'True'
+    reason: ReplicaSetUpdated
+---
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: web-krpcskjqv
+  namespace: fault-service-selector-mismatch
+  ownerReferences:
+  - apiVersion: apps/v1
+    kind: Deployment
+    name: web
+spec:
+  replicas: 2
+status:
+  replicas: 2
+  readyReplicas: 2
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: web-krpcskjqv-s4c48
+  namespace: fault-service-selector-mismatch
+  labels:
+    app: web
+    pod-template-hash: krpcskjqv
+  ownerReferences:
+  - apiVersion: apps/v1
+    kind: ReplicaSet
+    name: web-krpcskjqv
+  creationTimestamp: '2026-09-28T09:14:02Z'
+spec:
+  containers:
+  - name: web
+    image: nginx:1.27-alpine
+    ports:
+    - containerPort: 80
+    readinessProbe:
+      httpGet:
+        path: /
+        port: 80
+  serviceAccountName: default
+  nodeName: kube-explorer-worker
+status:
+  phase: Running
+  podIP: 10.244.1.10
+  containerStatuses:
+  - name: web
+    image: nginx:1.27-alpine
+    state:
+      running:
+        startedAt: '2026-09-28T09:14:09Z'
+    lastState: {}
+    ready: true
+    started: true
+    restartCount: 0
+  conditions:
+  - type: PodScheduled
+    status: 'True'
+  - type: Initialized
+    status: 'True'
+  - type: ContainersReady
+    status: 'True'
+  - type: Ready
+    status: 'True'
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: web-krpcskjqv-27bks
+  namespace: fault-service-selector-mismatch
+  labels:
+    app: web
+    pod-template-hash: krpcskjqv
+  ownerReferences:
+  - apiVersion: apps/v1
+    kind: ReplicaSet
+    name: web-krpcskjqv
+  creationTimestamp: '2026-09-28T09:14:02Z'
+spec:
+  containers:
+  - name: web
+    image: nginx:1.27-alpine
+    ports:
+    - containerPort: 80
+    readinessProbe:
+      httpGet:
+        path: /
+        port: 80
+  serviceAccountName: default
+  nodeName: kube-explorer-worker
+status:
+  phase: Running
+  podIP: 10.244.1.11
+  containerStatuses:
+  - name: web
+    image: nginx:1.27-alpine
+    state:
+      running:
+        startedAt: '2026-09-28T09:14:09Z'
+    lastState: {}
+    ready: true
+    started: true
+    restartCount: 0
+  conditions:
+  - type: PodScheduled
+    status: 'True'
+  - type: Initialized
+    status: 'True'
+  - type: ContainersReady
+    status: 'True'
+  - type: Ready
+    status: 'True'
+---
+apiVersion: v1
+kind: Event
+metadata:
+  name: web.8xxp54j8xkk5
+  namespace: fault-service-selector-mismatch
+involvedObject:
+  kind: Deployment
+  name: web
+  namespace: fault-service-selector-mismatch
+type: Normal
+reason: ScalingReplicaSet
+message: Scaled up replica set web-krpcskjqv to 2
+count: 1
+firstTimestamp: '2026-09-28T09:14:02Z'
+lastTimestamp: '2026-09-28T09:14:09Z'
+---
+apiVersion: v1
+kind: Event
+metadata:
+  name: web-krpcskjqv.gp47kkbnhfrv
+  namespace: fault-service-selector-mismatch
+involvedObject:
+  kind: ReplicaSet
+  name: web-krpcskjqv
+  namespace: fault-service-selector-mismatch
+type: Normal
+reason: SuccessfulCreate
+message: 'Created pod: web-krpcskjqv-s4c48'
+count: 1
+firstTimestamp: '2026-09-28T09:14:02Z'
+lastTimestamp: '2026-09-28T09:14:09Z'
+---
+apiVersion: v1
+kind: Event
+metadata:
+  name: web-krpcskjqv.pvdclrw57mds
+  namespace: fault-service-selector-mismatch
+involvedObject:
+  kind: ReplicaSet
+  name: web-krpcskjqv
+  namespace: fault-service-selector-mismatch
+type: Normal
+reason: SuccessfulCreate
+message: 'Created pod: web-krpcskjqv-27bks'
+count: 1
+firstTimestamp: '2026-09-28T09:14:02Z'
+lastTimestamp: '2026-09-28T09:14:09Z'
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: web
+  namespace: fault-service-selector-mismatch
+spec:
+  selector:
+    app: web-frontend
+  ports:
+  - port: 80
+    targetPort: 80
+---
+apiVersion: v1
+kind: Endpoints
+metadata:
+  name: web
+  namespace: fault-service-selector-mismatch
+---
+apiVersion: v1
+kind: Node
+metadata:
+  name: kube-explorer-control-plane
+  labels:
+    kubernetes.io/hostname: kube-explorer-control-plane
+    kubernetes.io/os: linux
+    node-role.kubernetes.io/control-plane: ''
+spec:
+  taints:
+  - key: node-role.kubernetes.io/control-plane
+    effect: NoSchedule
+status:
+  allocatable:
+    cpu: '8'
+    memory: 16304520Ki
+    pods: '110'
+  conditions:
+  - type: Ready
+    status: 'True'
+    reason: KubeletReady
+---
+apiVersion: v1
+kind: Node
+metadata:
+  name: kube-explorer-worker
+  labels:
+    kubernetes.io/hostname: kube-explorer-worker
+    kubernetes.io/os: linux
+spec: {}
+status:
+  allocatable:
+    cpu: '8'
+    memory: 16304520Ki
+    pods: '110'
+  conditions:
+  - type: Ready
+    status: 'True'
+    reason: KubeletReady
+---
+apiVersion: v1
+kind: Node
+metadata:
+  name: kube-explorer-worker2
+  labels:
+    kubernetes.io/hostname: kube-explorer-worker2
+    kubernetes.io/os: linux
+    dedicated: batch
+spec:
+  taints:
+  - key: dedicated
+    value: batch
+    effect: NoSchedule
+status:
+  allocatable:
+    cpu: '8'
+    memory: 16304520Ki
+    pods: '110'
+  conditions:
+  - type: Ready
+    status: 'True'
+    reason: KubeletReady

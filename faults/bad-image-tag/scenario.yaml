@@ -1,0 +1,13 @@
+id: bad-image-tag
+title: Image tag does not exist
+description: >
+  The Deployment references nginx:1.27.99-alpine, a tag that was never published.
+  The pull fails with "not found" and the pod sits in ImagePullBackOff.
+namespace: fault-bad-image-tag
+target:
+  kind: Deployment
+  name: catalog
+expected_category: image_pull_failure
+expected_signals:
+  - ImagePullBackOff
+  - "not found"

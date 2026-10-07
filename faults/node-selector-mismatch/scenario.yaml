@@ -1,0 +1,13 @@
+id: node-selector-mismatch
+title: nodeSelector matches no node
+description: >
+  The pod requires a node labelled disktype=ssd. No node carries that label, so the
+  pod stays Pending.
+namespace: fault-node-selector-mismatch
+target:
+  kind: Deployment
+  name: search
+expected_category: node_selector_mismatch
+expected_signals:
+  - "didn't match Pod's node affinity/selector"
+  - disktype

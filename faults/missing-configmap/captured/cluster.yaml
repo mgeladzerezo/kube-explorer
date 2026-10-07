@@ -1,0 +1,230 @@
+# Synthesized by faults/tools/synthesize_captures.py; not a recording of a live cluster.
+apiVersion: v1
+kind: Event
+metadata:
+  name: edge-proxy-bvcp5fngc-hrjf6.fll8qlwmjjvb
+  namespace: fault-missing-configmap
+involvedObject:
+  kind: Pod
+  name: edge-proxy-bvcp5fngc-hrjf6
+  namespace: fault-missing-configmap
+type: Normal
+reason: Scheduled
+message: Successfully assigned fault-missing-configmap/edge-proxy-bvcp5fngc-hrjf6 to kube-explorer-worker
+count: 1
+firstTimestamp: '2026-09-28T09:14:02Z'
+lastTimestamp: '2026-09-28T09:14:09Z'
+---
+apiVersion: v1
+kind: Event
+metadata:
+  name: edge-proxy-bvcp5fngc-hrjf6.7dwts9n6pm7l
+  namespace: fault-missing-configmap
+involvedObject:
+  kind: Pod
+  name: edge-proxy-bvcp5fngc-hrjf6
+  namespace: fault-missing-configmap
+type: Warning
+reason: FailedMount
+message: 'MountVolume.SetUp failed for volume "config" : configmap "edge-proxy-conf" not found'
+count: 12
+firstTimestamp: '2026-09-28T09:14:02Z'
+lastTimestamp: '2026-09-28T09:21:40Z'
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: edge-proxy
+  namespace: fault-missing-configmap
+  creationTimestamp: '2026-09-28T09:14:02Z'
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: edge-proxy
+  template:
+    metadata:
+      labels:
+        app: edge-proxy
+    spec:
+      containers:
+      - name: proxy
+        image: nginx:1.27-alpine
+        volumeMounts:
+        - name: config
+          mountPath: /etc/nginx/conf.d
+      volumes:
+      - name: config
+        configMap:
+          name: edge-proxy-conf
+status:
+  replicas: 1
+  updatedReplicas: 1
+  readyReplicas: 0
+  unavailableReplicas: 1
+  conditions:
+  - type: Available
+    status: 'False'
+    reason: MinimumReplicasUnavailable
+  - type: Progressing
+    status: 'True'
+    reason: ReplicaSetUpdated
+---
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: edge-proxy-bvcp5fngc
+  namespace: fault-missing-configmap
+  ownerReferences:
+  - apiVersion: apps/v1
+    kind: Deployment
+    name: edge-proxy
+spec:
+  replicas: 1
+status:
+  replicas: 1
+  readyReplicas: 0
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: edge-proxy-bvcp5fngc-hrjf6
+  namespace: fault-missing-configmap
+  labels:
+    app: edge-proxy
+    pod-template-hash: bvcp5fngc
+  ownerReferences:
+  - apiVersion: apps/v1
+    kind: ReplicaSet
+    name: edge-proxy-bvcp5fngc
+  creationTimestamp: '2026-09-28T09:14:02Z'
+spec:
+  containers:
+  - name: proxy
+    image: nginx:1.27-alpine
+    volumeMounts:
+    - name: config
+      mountPath: /etc/nginx/conf.d
+  volumes:
+  - name: config
+    configMap:
+      name: edge-proxy-conf
+  serviceAccountName: default
+  nodeName: kube-explorer-worker
+status:
+  phase: Pending
+  podIP: 10.244.1.10
+  containerStatuses:
+  - name: proxy
+    image: nginx:1.27-alpine
+    state:
+      waiting:
+        reason: ContainerCreating
+    lastState: {}
+    ready: false
+    started: false
+    restartCount: 0
+  conditions:
+  - type: PodScheduled
+    status: 'True'
+  - type: Initialized
+    status: 'True'
+  - type: ContainersReady
+    status: 'False'
+  - type: Ready
+    status: 'False'
+---
+apiVersion: v1
+kind: Event
+metadata:
+  name: edge-proxy.bxh4cqm7qqdh
+  namespace: fault-missing-configmap
+involvedObject:
+  kind: Deployment
+  name: edge-proxy
+  namespace: fault-missing-configmap
+type: Normal
+reason: ScalingReplicaSet
+message: Scaled up replica set edge-proxy-bvcp5fngc to 1
+count: 1
+firstTimestamp: '2026-09-28T09:14:02Z'
+lastTimestamp: '2026-09-28T09:14:09Z'
+---
+apiVersion: v1
+kind: Event
+metadata:
+  name: edge-proxy-bvcp5fngc.sr4pbpdlxzqv
+  namespace: fault-missing-configmap
+involvedObject:
+  kind: ReplicaSet
+  name: edge-proxy-bvcp5fngc
+  namespace: fault-missing-configmap
+type: Normal
+reason: SuccessfulCreate
+message: 'Created pod: edge-proxy-bvcp5fngc-hrjf6'
+count: 1
+firstTimestamp: '2026-09-28T09:14:02Z'
+lastTimestamp: '2026-09-28T09:14:09Z'
+---
+apiVersion: v1
+kind: Node
+metadata:
+  name: kube-explorer-control-plane
+  labels:
+    kubernetes.io/hostname: kube-explorer-control-plane
+    kubernetes.io/os: linux
+    node-role.kubernetes.io/control-plane: ''
+spec:
+  taints:
+  - key: node-role.kubernetes.io/control-plane
+    effect: NoSchedule
+status:
+  allocatable:
+    cpu: '8'
+    memory: 16304520Ki
+    pods: '110'
+  conditions:
+  - type: Ready
+    status: 'True'
+    reason: KubeletReady
+---
+apiVersion: v1
+kind: Node
+metadata:
+  name: kube-explorer-worker
+  labels:
+    kubernetes.io/hostname: kube-explorer-worker
+    kubernetes.io/os: linux
+spec: {}
+status:
+  allocatable:
+    cpu: '8'
+    memory: 16304520Ki
+    pods: '110'
+  conditions:
+  - type: Ready
+    status: 'True'
+    reason: KubeletReady
+---
+apiVersion: v1
+kind: Node
+metadata:
+  name: kube-explorer-worker2
+  labels:
+    kubernetes.io/hostname: kube-explorer-worker2
+    kubernetes.io/os: linux
+    dedicated: batch
+spec:
+  taints:
+  - key: dedicated
+    value: batch
+    effect: NoSchedule
+status:
+  allocatable:
+    cpu: '8'
+    memory: 16304520Ki
+    pods: '110'
+  conditions:
+  - type: Ready
+    status: 'True'
+    reason: KubeletReady

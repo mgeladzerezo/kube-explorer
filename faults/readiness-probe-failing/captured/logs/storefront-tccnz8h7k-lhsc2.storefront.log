@@ -1,0 +1,12 @@
+/docker-entrypoint.sh: Configuration complete; ready for start up
+2026/09/28 09:14:09 [notice] 1#1: using the "epoll" event method
+2026/09/28 09:14:09 [notice] 1#1: nginx/1.27.2
+2026/09/28 09:14:09 [notice] 1#1: start worker processes
+2026/09/28 09:21:20 [error] 30#30: *80 open() "/usr/share/nginx/html/healthz" failed (2: No such file or directory), client: 10.244.1.1, server: localhost, request: "GET /healthz HTTP/1.1", host: "10.244.1.10:80"
+10.244.1.1 - - [28/Sep/2026:09:21:20 +0000] "GET /healthz HTTP/1.1" 404 153 "-" "kube-probe/1.31" "-"
+2026/09/28 09:21:25 [error] 30#30: *81 open() "/usr/share/nginx/html/healthz" failed (2: No such file or directory), client: 10.244.1.1, server: localhost, request: "GET /healthz HTTP/1.1", host: "10.244.1.10:80"
+10.244.1.1 - - [28/Sep/2026:09:21:25 +0000] "GET /healthz HTTP/1.1" 404 153 "-" "kube-probe/1.31" "-"
+2026/09/28 09:21:30 [error] 30#30: *82 open() "/usr/share/nginx/html/healthz" failed (2: No such file or directory), client: 10.244.1.1, server: localhost, request: "GET /healthz HTTP/1.1", host: "10.244.1.10:80"
+10.244.1.1 - - [28/Sep/2026:09:21:30 +0000] "GET /healthz HTTP/1.1" 404 153 "-" "kube-probe/1.31" "-"
+2026/09/28 09:21:35 [error] 30#30: *83 open() "/usr/share/nginx/html/healthz" failed (2: No such file or directory), client: 10.244.1.1, server: localhost, request: "GET /healthz HTTP/1.1", host: "10.244.1.10:80"
+10.244.1.1 - - [28/Sep/2026:09:21:35 +0000] "GET /healthz HTTP/1.1" 404 153 "-" "kube-probe/1.31" "-"

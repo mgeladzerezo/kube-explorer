@@ -1,0 +1,13 @@
+id: quota-exceeded
+title: ResourceQuota prevents the ReplicaSet from creating pods
+description: >
+  The namespace quota allows 500m of CPU requests. Each replica requests 250m, so only
+  two of the four replicas are admitted; the rest are rejected with "exceeded quota".
+namespace: fault-quota-exceeded
+target:
+  kind: Deployment
+  name: api
+expected_category: resource_quota_exceeded
+expected_signals:
+  - "exceeded quota: compute-quota"
+  - FailedCreate

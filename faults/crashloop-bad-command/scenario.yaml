@@ -1,0 +1,13 @@
+id: crashloop-bad-command
+title: Container command does not exist in the image
+description: >
+  The container command is /usr/local/bin/notifier, which the busybox image does not
+  contain. The runtime cannot start the process and the pod goes into CrashLoopBackOff.
+namespace: fault-crashloop-bad-command
+target:
+  kind: Deployment
+  name: notifier
+expected_category: bad_command
+expected_signals:
+  - "/usr/local/bin/notifier"
+  - "no such file or directory"

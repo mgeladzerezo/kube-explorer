@@ -1,0 +1,38 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: fault-init-container-failing
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: inventory
+  namespace: fault-init-container-failing
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: inventory
+  template:
+    metadata:
+      labels:
+        app: inventory
+    spec:
+      initContainers:
+        - name: migrate
+          image: busybox:1.36
+          env:
+            - name: DATABASE_URL
+              value: postgres://inventory:Tr0ub4dor-inventory@inventory-db:5432/inventory
+          command:
+            - sh
+            - -c
+            - |
+              echo "running migrations against $DATABASE_URL"
+              if [ ! -f /migrations/0001_init.sql ]; then
+                echo "migrate: /migrations/0001_init.sql is missing from the image" >&2
+                exit 1
+              fi
+      containers:
+        - name: inventory
+          image: nginx:1.27-alpine

@@ -1,0 +1,41 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: fault-oom-killed
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: report-worker
+  namespace: fault-oom-killed
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: report-worker
+  template:
+    metadata:
+      labels:
+        app: report-worker
+    spec:
+      containers:
+        - name: worker
+          image: python:3.12-alpine
+          command:
+            - python
+            - -u
+            - -c
+            - |
+              import time
+              print("loading report dataset into memory", flush=True)
+              rows = []
+              while True:
+                  rows.append(bytearray(8 * 1024 * 1024))
+                  print(f"loaded {len(rows) * 8} MiB", flush=True)
+                  time.sleep(0.2)
+          resources:
+            requests:
+              cpu: 50m
+              memory: 32Mi
+            limits:
+              memory: 64Mi

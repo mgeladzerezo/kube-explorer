@@ -1,0 +1,281 @@
+# Synthesized by faults/tools/synthesize_captures.py; not a recording of a live cluster.
+apiVersion: v1
+kind: Event
+metadata:
+  name: pricing-r2k9mqp8v-dfr42.vzgzd8vwmsbh
+  namespace: fault-private-registry-no-pull-secret
+involvedObject:
+  kind: Pod
+  name: pricing-r2k9mqp8v-dfr42
+  namespace: fault-private-registry-no-pull-secret
+type: Normal
+reason: Scheduled
+message: Successfully assigned fault-private-registry-no-pull-secret/pricing-r2k9mqp8v-dfr42 to kube-explorer-worker
+count: 1
+firstTimestamp: '2026-09-28T09:14:02Z'
+lastTimestamp: '2026-09-28T09:14:09Z'
+---
+apiVersion: v1
+kind: Event
+metadata:
+  name: pricing-r2k9mqp8v-dfr42.tfxfgrgcrpjm
+  namespace: fault-private-registry-no-pull-secret
+involvedObject:
+  kind: Pod
+  name: pricing-r2k9mqp8v-dfr42
+  namespace: fault-private-registry-no-pull-secret
+type: Normal
+reason: Pulling
+message: Pulling image "ghcr.io/kube-explorer-faults/pricing-api:1.4.2"
+count: 4
+firstTimestamp: '2026-09-28T09:14:02Z'
+lastTimestamp: '2026-09-28T09:21:40Z'
+---
+apiVersion: v1
+kind: Event
+metadata:
+  name: pricing-r2k9mqp8v-dfr42.mpqpgmkm7tpc
+  namespace: fault-private-registry-no-pull-secret
+involvedObject:
+  kind: Pod
+  name: pricing-r2k9mqp8v-dfr42
+  namespace: fault-private-registry-no-pull-secret
+type: Warning
+reason: Failed
+message: 'Failed to pull image "ghcr.io/kube-explorer-faults/pricing-api:1.4.2": failed to pull and unpack image "ghcr.io/kube-explorer-faults/pricing-api:1.4.2": failed to resolve reference "ghcr.io/kube-explorer-faults/pricing-api:1.4.2": failed to authorize: failed to fetch anonymous token: unexpected status from GET request to https://ghcr.io/token?scope=repository%3Akube-explorer-faults%2Fpricing-api%3Apull&service=ghcr.io: 403 Forbidden'
+count: 4
+firstTimestamp: '2026-09-28T09:14:02Z'
+lastTimestamp: '2026-09-28T09:21:40Z'
+---
+apiVersion: v1
+kind: Event
+metadata:
+  name: pricing-r2k9mqp8v-dfr42.wv7d5gxppj4z
+  namespace: fault-private-registry-no-pull-secret
+involvedObject:
+  kind: Pod
+  name: pricing-r2k9mqp8v-dfr42
+  namespace: fault-private-registry-no-pull-secret
+type: Warning
+reason: Failed
+message: 'Error: ErrImagePull'
+count: 4
+firstTimestamp: '2026-09-28T09:14:02Z'
+lastTimestamp: '2026-09-28T09:21:40Z'
+---
+apiVersion: v1
+kind: Event
+metadata:
+  name: pricing-r2k9mqp8v-dfr42.6btqhtl9bk6h
+  namespace: fault-private-registry-no-pull-secret
+involvedObject:
+  kind: Pod
+  name: pricing-r2k9mqp8v-dfr42
+  namespace: fault-private-registry-no-pull-secret
+type: Normal
+reason: BackOff
+message: Back-off pulling image "ghcr.io/kube-explorer-faults/pricing-api:1.4.2"
+count: 18
+firstTimestamp: '2026-09-28T09:14:02Z'
+lastTimestamp: '2026-09-28T09:21:40Z'
+---
+apiVersion: v1
+kind: Event
+metadata:
+  name: pricing-r2k9mqp8v-dfr42.qb6stc9bfz6d
+  namespace: fault-private-registry-no-pull-secret
+involvedObject:
+  kind: Pod
+  name: pricing-r2k9mqp8v-dfr42
+  namespace: fault-private-registry-no-pull-secret
+type: Warning
+reason: Failed
+message: 'Error: ImagePullBackOff'
+count: 18
+firstTimestamp: '2026-09-28T09:14:02Z'
+lastTimestamp: '2026-09-28T09:21:40Z'
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pricing
+  namespace: fault-private-registry-no-pull-secret
+  creationTimestamp: '2026-09-28T09:14:02Z'
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pricing
+  template:
+    metadata:
+      labels:
+        app: pricing
+    spec:
+      containers:
+      - name: pricing
+        image: ghcr.io/kube-explorer-faults/pricing-api:1.4.2
+status:
+  replicas: 1
+  updatedReplicas: 1
+  readyReplicas: 0
+  unavailableReplicas: 1
+  conditions:
+  - type: Available
+    status: 'False'
+    reason: MinimumReplicasUnavailable
+  - type: Progressing
+    status: 'True'
+    reason: ReplicaSetUpdated
+---
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: pricing-r2k9mqp8v
+  namespace: fault-private-registry-no-pull-secret
+  ownerReferences:
+  - apiVersion: apps/v1
+    kind: Deployment
+    name: pricing
+spec:
+  replicas: 1
+status:
+  replicas: 1
+  readyReplicas: 0
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pricing-r2k9mqp8v-dfr42
+  namespace: fault-private-registry-no-pull-secret
+  labels:
+    app: pricing
+    pod-template-hash: r2k9mqp8v
+  ownerReferences:
+  - apiVersion: apps/v1
+    kind: ReplicaSet
+    name: pricing-r2k9mqp8v
+  creationTimestamp: '2026-09-28T09:14:02Z'
+spec:
+  containers:
+  - name: pricing
+    image: ghcr.io/kube-explorer-faults/pricing-api:1.4.2
+  serviceAccountName: default
+  nodeName: kube-explorer-worker
+status:
+  phase: Pending
+  podIP: 10.244.1.10
+  containerStatuses:
+  - name: pricing
+    image: ghcr.io/kube-explorer-faults/pricing-api:1.4.2
+    state:
+      waiting:
+        reason: ImagePullBackOff
+        message: Back-off pulling image "ghcr.io/kube-explorer-faults/pricing-api:1.4.2"
+    lastState: {}
+    ready: false
+    started: false
+    restartCount: 0
+  conditions:
+  - type: PodScheduled
+    status: 'True'
+  - type: Initialized
+    status: 'True'
+  - type: ContainersReady
+    status: 'False'
+  - type: Ready
+    status: 'False'
+---
+apiVersion: v1
+kind: Event
+metadata:
+  name: pricing.jmgt8d6q648s
+  namespace: fault-private-registry-no-pull-secret
+involvedObject:
+  kind: Deployment
+  name: pricing
+  namespace: fault-private-registry-no-pull-secret
+type: Normal
+reason: ScalingReplicaSet
+message: Scaled up replica set pricing-r2k9mqp8v to 1
+count: 1
+firstTimestamp: '2026-09-28T09:14:02Z'
+lastTimestamp: '2026-09-28T09:14:09Z'
+---
+apiVersion: v1
+kind: Event
+metadata:
+  name: pricing-r2k9mqp8v.blhnrlnjk49r
+  namespace: fault-private-registry-no-pull-secret
+involvedObject:
+  kind: ReplicaSet
+  name: pricing-r2k9mqp8v
+  namespace: fault-private-registry-no-pull-secret
+type: Normal
+reason: SuccessfulCreate
+message: 'Created pod: pricing-r2k9mqp8v-dfr42'
+count: 1
+firstTimestamp: '2026-09-28T09:14:02Z'
+lastTimestamp: '2026-09-28T09:14:09Z'
+---
+apiVersion: v1
+kind: Node
+metadata:
+  name: kube-explorer-control-plane
+  labels:
+    kubernetes.io/hostname: kube-explorer-control-plane
+    kubernetes.io/os: linux
+    node-role.kubernetes.io/control-plane: ''
+spec:
+  taints:
+  - key: node-role.kubernetes.io/control-plane
+    effect: NoSchedule
+status:
+  allocatable:
+    cpu: '8'
+    memory: 16304520Ki
+    pods: '110'
+  conditions:
+  - type: Ready
+    status: 'True'
+    reason: KubeletReady
+---
+apiVersion: v1
+kind: Node
+metadata:
+  name: kube-explorer-worker
+  labels:
+    kubernetes.io/hostname: kube-explorer-worker
+    kubernetes.io/os: linux
+spec: {}
+status:
+  allocatable:
+    cpu: '8'
+    memory: 16304520Ki
+    pods: '110'
+  conditions:
+  - type: Ready
+    status: 'True'
+    reason: KubeletReady
+---
+apiVersion: v1
+kind: Node
+metadata:
+  name: kube-explorer-worker2
+  labels:
+    kubernetes.io/hostname: kube-explorer-worker2
+    kubernetes.io/os: linux
+    dedicated: batch
+spec:
+  taints:
+  - key: dedicated
+    value: batch
+    effect: NoSchedule
+status:
+  allocatable:
+    cpu: '8'
+    memory: 16304520Ki
+    pods: '110'
+  conditions:
+  - type: Ready
+    status: 'True'
+    reason: KubeletReady

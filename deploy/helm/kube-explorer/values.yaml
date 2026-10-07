@@ -1,0 +1,79 @@
+image:
+  backend:
+    repository: kube-explorer-backend
+    tag: ""
+  frontend:
+    repository: kube-explorer-frontend
+    tag: ""
+  pullPolicy: IfNotPresent
+
+backend:
+  # Each replica runs its own watches and keeps its own in-memory view, so replicas are
+  # independent. One is enough unless the API pod itself needs to survive node drains.
+  replicas: 1
+  resources:
+    requests: { cpu: 100m, memory: 192Mi }
+    limits: { memory: 512Mi }
+  env:
+    LLM_MODE: anthropic
+    ANTHROPIC_MODEL: claude-opus-5-5
+    ANTHROPIC_EFFORT: high
+    LOG_TAIL_LINES: "80"
+
+frontend:
+  replicas: 1
+  resources:
+    requests: { cpu: 20m, memory: 32Mi }
+    limits: { memory: 128Mi }
+
+serviceAccount:
+  # e.g. eks.amazonaws.com/role-arn when the pod needs an IAM role
+  annotations: {}
+
+# The backend reads ANTHROPIC_API_KEY and DATABASE_URL from one Secret.
+secret:
+  # Name of the Secret the backend mounts. With externalSecret.enabled the
+  # External Secrets Operator creates it; otherwise it must already exist.
+  name: kube-explorer
+  externalSecret:
+    enabled: true
+    refreshInterval: 1h
+    secretStore:
+      kind: ClusterSecretStore
+      name: aws-secrets-manager
+    # Secrets Manager secret holding a JSON object with the two properties below.
+    remoteKey: kube-explorer/prod
+    properties:
+      anthropicApiKey: anthropic_api_key
+      databaseUrl: database_url
+
+migrations:
+  enabled: true
+
+networkPolicy:
+  enabled: true
+  # NetworkPolicy cannot select the API server by label. Set this to the control plane
+  # endpoint(s): `kubectl get endpoints kubernetes -o wide`.
+  kubeApiServer:
+    cidrs: ["10.0.0.0/8"]
+    ports: [443, 6443]
+  database:
+    cidrs: ["10.0.0.0/8"]
+    port: 5432
+  # api.anthropic.com has no stable IP range, and plain NetworkPolicy has no FQDN rules,
+  # so HTTPS egress is open to public addresses only.
+  anthropicEgress:
+    enabled: true
+    exceptCidrs: ["10.0.0.0/8", "172.16.0.0/12", "192.168.0.0/16"]
+  # Namespaces allowed to reach the frontend (ingress controller) and to scrape /metrics.
+  ingressNamespace: ingress-nginx
+  metricsNamespace: monitoring
+
+ingress:
+  enabled: false
+  className: nginx
+  host: kube-explorer.example.com
+  tlsSecretName: ""
+
+serviceMonitor:
+  enabled: false

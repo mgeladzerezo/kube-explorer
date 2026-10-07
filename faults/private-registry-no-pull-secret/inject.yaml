@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: fault-private-registry-no-pull-secret
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pricing
+  namespace: fault-private-registry-no-pull-secret
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pricing
+  template:
+    metadata:
+      labels:
+        app: pricing
+    spec:
+      containers:
+        - name: pricing
+          # Stands in for a private image: GHCR answers anonymous pulls of a private
+          # repository and of one that does not exist the same way.
+          image: ghcr.io/kube-explorer-faults/pricing-api:1.4.2

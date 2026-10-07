@@ -1,0 +1,159 @@
+# A workload that leaks credentials in every place the redactor is expected to cover.
+# All credentials are made up; test_redaction.py lists them as canaries.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: payments-api
+  namespace: shop
+  annotations:
+    deployment.kubernetes.io/revision: "4"
+    kubectl.kubernetes.io/last-applied-configuration: >
+      {"apiVersion":"apps/v1","kind":"Deployment","spec":{"template":{"spec":{"containers":[{"env":[{"name":"DB_PASSWORD","value":"S3cr3t-Passw0rd!"}]}]}}}}
+  managedFields:
+    - manager: kubectl-client-side-apply
+      operation: Update
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: payments-api
+  template:
+    metadata:
+      labels:
+        app: payments-api
+    spec:
+      containers:
+        - name: api
+          image: registry.example.com/shop/payments-api:2.8.1
+          args:
+            - --listen=:8080
+            - --jwt-secret=hs256-signing-key-123
+            - --smtp-password
+            - smtp-Pa55-separate-arg
+          env:
+            - name: LOG_LEVEL
+              value: debug
+            - name: DB_PASSWORD
+              value: S3cr3t-Passw0rd!
+            - name: DATABASE_URL
+              value: postgresql://payments:pg-Pa55word@payments-db.shop.svc:5432/payments?sslmode=require
+            - name: REDIS_URL
+              value: redis://:r3dis-pw@redis.shop.svc:6379/0
+            - name: STRIPE_API_KEY
+              value: sk_live_51MqxExampleKeyValue00
+            - name: API_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: payments-api-token
+                  key: token
+          ports:
+            - containerPort: 8080
+      volumes:
+        - name: tls
+          secret:
+            secretName: payments-tls
+---
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: payments-api-7c9d8f6b5
+  namespace: shop
+  ownerReferences:
+    - apiVersion: apps/v1
+      kind: Deployment
+      name: payments-api
+spec:
+  replicas: 1
+status:
+  replicas: 1
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: payments-api-7c9d8f6b5-x2kfp
+  namespace: shop
+  labels:
+    app: payments-api
+  ownerReferences:
+    - apiVersion: apps/v1
+      kind: ReplicaSet
+      name: payments-api-7c9d8f6b5
+spec:
+  nodeName: worker-1
+  containers:
+    - name: api
+      image: registry.example.com/shop/payments-api:2.8.1
+      args:
+        - --listen=:8080
+        - --jwt-secret=hs256-signing-key-123
+        - --smtp-password
+        - smtp-Pa55-separate-arg
+      env:
+        - name: LOG_LEVEL
+          value: debug
+        - name: DB_PASSWORD
+          value: S3cr3t-Passw0rd!
+        - name: DATABASE_URL
+          value: postgresql://payments:pg-Pa55word@payments-db.shop.svc:5432/payments?sslmode=require
+        - name: REDIS_URL
+          value: redis://:r3dis-pw@redis.shop.svc:6379/0
+        - name: STRIPE_API_KEY
+          value: sk_live_51MqxExampleKeyValue00
+        - name: API_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: payments-api-token
+              key: token
+  volumes:
+    - name: tls
+      secret:
+        secretName: payments-tls
+status:
+  phase: Running
+  conditions:
+    - type: PodScheduled
+      status: "True"
+  containerStatuses:
+    - name: api
+      image: registry.example.com/shop/payments-api:2.8.1
+      ready: false
+      restartCount: 4
+      state:
+        waiting:
+          reason: CrashLoopBackOff
+          message: back-off 1m20s restarting failed container=api
+      lastState:
+        terminated:
+          reason: Error
+          exitCode: 1
+          message: "fatal: connect postgresql://payments:pg-Pa55word@payments-db.shop.svc:5432/payments failed"
+---
+apiVersion: v1
+kind: Event
+metadata:
+  name: payments-api-7c9d8f6b5-x2kfp.17f1a
+  namespace: shop
+involvedObject:
+  kind: Pod
+  name: payments-api-7c9d8f6b5-x2kfp
+  namespace: shop
+type: Warning
+reason: Unhealthy
+message: 'Readiness probe failed: Get "http://10.244.1.20:8080/ready?token=probe-tok-12345": context deadline exceeded'
+count: 12
+lastTimestamp: "2026-09-28T09:21:40Z"
+---
+apiVersion: v1
+kind: Event
+metadata:
+  name: payments-api-7c9d8f6b5-x2kfp.17f1b
+  namespace: shop
+involvedObject:
+  kind: Pod
+  name: payments-api-7c9d8f6b5-x2kfp
+  namespace: shop
+type: Warning
+reason: BackOff
+message: Back-off restarting failed container api in pod payments-api-7c9d8f6b5-x2kfp
+count: 9
+lastTimestamp: "2026-09-28T09:21:30Z"

@@ -1,0 +1,13 @@
+id: wrong-container-port
+title: Service targetPort points at a port nothing listens on
+description: >
+  nginx listens on 80 but the Service forwards to targetPort 8080. The pods are Ready
+  and the Service has endpoints, yet every connection through it is refused.
+namespace: fault-wrong-container-port
+target:
+  kind: Deployment
+  name: docs
+expected_category: service_port_mismatch
+expected_signals:
+  - "8080"
+  - undeclared_target_ports

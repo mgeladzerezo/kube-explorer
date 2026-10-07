@@ -1,0 +1,110 @@
+{{- if .Values.networkPolicy.enabled }}
+{{- $np := .Values.networkPolicy }}
+{{- $dns := `
+- to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: kube-system
+      podSelector:
+        matchLabels:
+          k8s-app: kube-dns
+  ports:
+    - { protocol: UDP, port: 53 }
+    - { protocol: TCP, port: 53 }` }}
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ include "kube-explorer.name" . }}-backend
+  labels:
+    {{- include "kube-explorer.labels" . | nindent 4 }}
+spec:
+  podSelector:
+    matchLabels:
+      {{- include "kube-explorer.selector" (dict "Release" .Release "component" "backend") | nindent 6 }}
+  policyTypes: ["Ingress", "Egress"]
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              {{- include "kube-explorer.selector" (dict "Release" .Release "component" "frontend") | nindent 14 }}
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: {{ $np.metricsNamespace }}
+      ports:
+        - { protocol: TCP, port: 8000 }
+  egress:
+    {{- $dns | nindent 4 }}
+    - to:
+        {{- range $np.kubeApiServer.cidrs }}
+        - ipBlock: { cidr: {{ . | quote }} }
+        {{- end }}
+      ports:
+        {{- range $np.kubeApiServer.ports }}
+        - { protocol: TCP, port: {{ . }} }
+        {{- end }}
+    - to:
+        {{- range $np.database.cidrs }}
+        - ipBlock: { cidr: {{ . | quote }} }
+        {{- end }}
+      ports:
+        - { protocol: TCP, port: {{ $np.database.port }} }
+    {{- if $np.anthropicEgress.enabled }}
+    - to:
+        - ipBlock:
+            cidr: 0.0.0.0/0
+            except: {{ toJson $np.anthropicEgress.exceptCidrs }}
+      ports:
+        - { protocol: TCP, port: 443 }
+    {{- end }}
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ include "kube-explorer.name" . }}-frontend
+  labels:
+    {{- include "kube-explorer.labels" . | nindent 4 }}
+spec:
+  podSelector:
+    matchLabels:
+      {{- include "kube-explorer.selector" (dict "Release" .Release "component" "frontend") | nindent 6 }}
+  policyTypes: ["Ingress", "Egress"]
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: {{ $np.ingressNamespace }}
+      ports:
+        - { protocol: TCP, port: 8080 }
+  egress:
+    {{- $dns | nindent 4 }}
+    - to:
+        - podSelector:
+            matchLabels:
+              {{- include "kube-explorer.selector" (dict "Release" .Release "component" "backend") | nindent 14 }}
+      ports:
+        - { protocol: TCP, port: 8000 }
+---
+# The migration job only needs DNS and the database.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ include "kube-explorer.name" . }}-migrate
+  labels:
+    {{- include "kube-explorer.labels" . | nindent 4 }}
+  annotations:
+    helm.sh/hook: pre-install,pre-upgrade
+    helm.sh/hook-weight: "-5"
+spec:
+  podSelector:
+    matchLabels:
+      {{- include "kube-explorer.selector" (dict "Release" .Release "component" "migrate") | nindent 6 }}
+  policyTypes: ["Ingress", "Egress"]
+  egress:
+    {{- $dns | nindent 4 }}
+    - to:
+        {{- range $np.database.cidrs }}
+        - ipBlock: { cidr: {{ . | quote }} }
+        {{- end }}
+      ports:
+        - { protocol: TCP, port: {{ $np.database.port }} }
+{{- end }}

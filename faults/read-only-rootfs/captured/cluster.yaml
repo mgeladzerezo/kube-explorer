@@ -1,0 +1,226 @@
+# Synthesized by faults/tools/synthesize_captures.py; not a recording of a live cluster.
+apiVersion: v1
+kind: Event
+metadata:
+  name: assets-ngngkbzcq-q8wlh.tw6jhp85wcgg
+  namespace: fault-read-only-rootfs
+involvedObject:
+  kind: Pod
+  name: assets-ngngkbzcq-q8wlh
+  namespace: fault-read-only-rootfs
+type: Normal
+reason: Scheduled
+message: Successfully assigned fault-read-only-rootfs/assets-ngngkbzcq-q8wlh to kube-explorer-worker
+count: 1
+firstTimestamp: '2026-09-28T09:14:02Z'
+lastTimestamp: '2026-09-28T09:14:09Z'
+---
+apiVersion: v1
+kind: Event
+metadata:
+  name: assets-ngngkbzcq-q8wlh.h94plqrck27d
+  namespace: fault-read-only-rootfs
+involvedObject:
+  kind: Pod
+  name: assets-ngngkbzcq-q8wlh
+  namespace: fault-read-only-rootfs
+type: Warning
+reason: BackOff
+message: Back-off restarting failed container assets
+count: 31
+firstTimestamp: '2026-09-28T09:14:02Z'
+lastTimestamp: '2026-09-28T09:21:40Z'
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: assets
+  namespace: fault-read-only-rootfs
+  creationTimestamp: '2026-09-28T09:14:02Z'
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: assets
+  template:
+    metadata:
+      labels:
+        app: assets
+    spec:
+      containers:
+      - name: assets
+        image: nginx:1.27-alpine
+        securityContext:
+          readOnlyRootFilesystem: true
+status:
+  replicas: 1
+  updatedReplicas: 1
+  readyReplicas: 0
+  unavailableReplicas: 1
+  conditions:
+  - type: Available
+    status: 'False'
+    reason: MinimumReplicasUnavailable
+  - type: Progressing
+    status: 'True'
+    reason: ReplicaSetUpdated
+---
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: assets-ngngkbzcq
+  namespace: fault-read-only-rootfs
+  ownerReferences:
+  - apiVersion: apps/v1
+    kind: Deployment
+    name: assets
+spec:
+  replicas: 1
+status:
+  replicas: 1
+  readyReplicas: 0
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: assets-ngngkbzcq-q8wlh
+  namespace: fault-read-only-rootfs
+  labels:
+    app: assets
+    pod-template-hash: ngngkbzcq
+  ownerReferences:
+  - apiVersion: apps/v1
+    kind: ReplicaSet
+    name: assets-ngngkbzcq
+  creationTimestamp: '2026-09-28T09:14:02Z'
+spec:
+  containers:
+  - name: assets
+    image: nginx:1.27-alpine
+    securityContext:
+      readOnlyRootFilesystem: true
+  serviceAccountName: default
+  nodeName: kube-explorer-worker
+status:
+  phase: Running
+  podIP: 10.244.1.10
+  containerStatuses:
+  - name: assets
+    image: nginx:1.27-alpine
+    state:
+      waiting:
+        reason: CrashLoopBackOff
+        message: back-off 2m40s restarting failed container=assets
+    lastState:
+      terminated:
+        reason: Error
+        exitCode: 1
+        startedAt: '2026-09-28T09:18:51Z'
+        finishedAt: '2026-09-28T09:18:53Z'
+    ready: false
+    started: false
+    restartCount: 6
+  conditions:
+  - type: PodScheduled
+    status: 'True'
+  - type: Initialized
+    status: 'True'
+  - type: ContainersReady
+    status: 'False'
+  - type: Ready
+    status: 'False'
+---
+apiVersion: v1
+kind: Event
+metadata:
+  name: assets.6gn5jwfcwn4s
+  namespace: fault-read-only-rootfs
+involvedObject:
+  kind: Deployment
+  name: assets
+  namespace: fault-read-only-rootfs
+type: Normal
+reason: ScalingReplicaSet
+message: Scaled up replica set assets-ngngkbzcq to 1
+count: 1
+firstTimestamp: '2026-09-28T09:14:02Z'
+lastTimestamp: '2026-09-28T09:14:09Z'
+---
+apiVersion: v1
+kind: Event
+metadata:
+  name: assets-ngngkbzcq.djp4tsfgvtt9
+  namespace: fault-read-only-rootfs
+involvedObject:
+  kind: ReplicaSet
+  name: assets-ngngkbzcq
+  namespace: fault-read-only-rootfs
+type: Normal
+reason: SuccessfulCreate
+message: 'Created pod: assets-ngngkbzcq-q8wlh'
+count: 1
+firstTimestamp: '2026-09-28T09:14:02Z'
+lastTimestamp: '2026-09-28T09:14:09Z'
+---
+apiVersion: v1
+kind: Node
+metadata:
+  name: kube-explorer-control-plane
+  labels:
+    kubernetes.io/hostname: kube-explorer-control-plane
+    kubernetes.io/os: linux
+    node-role.kubernetes.io/control-plane: ''
+spec:
+  taints:
+  - key: node-role.kubernetes.io/control-plane
+    effect: NoSchedule
+status:
+  allocatable:
+    cpu: '8'
+    memory: 16304520Ki
+    pods: '110'
+  conditions:
+  - type: Ready
+    status: 'True'
+    reason: KubeletReady
+---
+apiVersion: v1
+kind: Node
+metadata:
+  name: kube-explorer-worker
+  labels:
+    kubernetes.io/hostname: kube-explorer-worker
+    kubernetes.io/os: linux
+spec: {}
+status:
+  allocatable:
+    cpu: '8'
+    memory: 16304520Ki
+    pods: '110'
+  conditions:
+  - type: Ready
+    status: 'True'
+    reason: KubeletReady
+---
+apiVersion: v1
+kind: Node
+metadata:
+  name: kube-explorer-worker2
+  labels:
+    kubernetes.io/hostname: kube-explorer-worker2
+    kubernetes.io/os: linux
+    dedicated: batch
+spec:
+  taints:
+  - key: dedicated
+    value: batch
+    effect: NoSchedule
+status:
+  allocatable:
+    cpu: '8'
+    memory: 16304520Ki
+    pods: '110'
+  conditions:
+  - type: Ready
+    status: 'True'
+    reason: KubeletReady

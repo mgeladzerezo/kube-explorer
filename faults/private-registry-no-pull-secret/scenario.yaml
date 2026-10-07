@@ -1,0 +1,13 @@
+id: private-registry-no-pull-secret
+title: Private registry image pulled without credentials
+description: >
+  The image lives in a private registry and the pod has no imagePullSecrets. The
+  registry refuses the anonymous pull and the pod sits in ImagePullBackOff.
+namespace: fault-private-registry-no-pull-secret
+target:
+  kind: Deployment
+  name: pricing
+expected_category: image_pull_auth
+expected_signals:
+  - "failed to authorize"
+  - "403 Forbidden"

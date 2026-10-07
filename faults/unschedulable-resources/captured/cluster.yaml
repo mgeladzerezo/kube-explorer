@@ -1,0 +1,193 @@
+# Synthesized by faults/tools/synthesize_captures.py; not a recording of a live cluster.
+apiVersion: v1
+kind: Event
+metadata:
+  name: analytics-vdj4vbj5b-lxmsl.tvngdlxmclpj
+  namespace: fault-unschedulable-resources
+involvedObject:
+  kind: Pod
+  name: analytics-vdj4vbj5b-lxmsl
+  namespace: fault-unschedulable-resources
+type: Warning
+reason: FailedScheduling
+message: '0/3 nodes are available: 1 Insufficient memory, 1 node(s) had untolerated taint {dedicated: batch}, 1 node(s) had untolerated taint {node-role.kubernetes.io/control-plane: }. preemption: 0/3 nodes are available: 1 No preemption victims found for incoming pod, 2 Preemption is not helpful for scheduling.'
+count: 9
+firstTimestamp: '2026-09-28T09:14:02Z'
+lastTimestamp: '2026-09-28T09:21:40Z'
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: analytics
+  namespace: fault-unschedulable-resources
+  creationTimestamp: '2026-09-28T09:14:02Z'
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: analytics
+  template:
+    metadata:
+      labels:
+        app: analytics
+    spec:
+      containers:
+      - name: analytics
+        image: nginx:1.27-alpine
+        resources:
+          requests:
+            cpu: 500m
+            memory: 64Gi
+status:
+  replicas: 1
+  updatedReplicas: 1
+  readyReplicas: 1
+  unavailableReplicas: 0
+  conditions:
+  - type: Available
+    status: 'True'
+    reason: MinimumReplicasAvailable
+  - type: Progressing
+    status: 'True'
+    reason: ReplicaSetUpdated
+---
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: analytics-vdj4vbj5b
+  namespace: fault-unschedulable-resources
+  ownerReferences:
+  - apiVersion: apps/v1
+    kind: Deployment
+    name: analytics
+spec:
+  replicas: 1
+status:
+  replicas: 1
+  readyReplicas: 1
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: analytics-vdj4vbj5b-lxmsl
+  namespace: fault-unschedulable-resources
+  labels:
+    app: analytics
+    pod-template-hash: vdj4vbj5b
+  ownerReferences:
+  - apiVersion: apps/v1
+    kind: ReplicaSet
+    name: analytics-vdj4vbj5b
+  creationTimestamp: '2026-09-28T09:14:02Z'
+spec:
+  containers:
+  - name: analytics
+    image: nginx:1.27-alpine
+    resources:
+      requests:
+        cpu: 500m
+        memory: 64Gi
+  serviceAccountName: default
+status:
+  phase: Pending
+  conditions:
+  - type: PodScheduled
+    status: 'False'
+    reason: Unschedulable
+    message: '0/3 nodes are available: 1 Insufficient memory, 1 node(s) had untolerated taint {dedicated: batch}, 1 node(s) had untolerated taint {node-role.kubernetes.io/control-plane: }. preemption: 0/3 nodes are available: 1 No preemption victims found for incoming pod, 2 Preemption is not helpful for scheduling.'
+  containerStatuses: []
+---
+apiVersion: v1
+kind: Event
+metadata:
+  name: analytics.pqslmkmb9mht
+  namespace: fault-unschedulable-resources
+involvedObject:
+  kind: Deployment
+  name: analytics
+  namespace: fault-unschedulable-resources
+type: Normal
+reason: ScalingReplicaSet
+message: Scaled up replica set analytics-vdj4vbj5b to 1
+count: 1
+firstTimestamp: '2026-09-28T09:14:02Z'
+lastTimestamp: '2026-09-28T09:14:09Z'
+---
+apiVersion: v1
+kind: Event
+metadata:
+  name: analytics-vdj4vbj5b.d4gwrt55dnv8
+  namespace: fault-unschedulable-resources
+involvedObject:
+  kind: ReplicaSet
+  name: analytics-vdj4vbj5b
+  namespace: fault-unschedulable-resources
+type: Normal
+reason: SuccessfulCreate
+message: 'Created pod: analytics-vdj4vbj5b-lxmsl'
+count: 1
+firstTimestamp: '2026-09-28T09:14:02Z'
+lastTimestamp: '2026-09-28T09:14:09Z'
+---
+apiVersion: v1
+kind: Node
+metadata:
+  name: kube-explorer-control-plane
+  labels:
+    kubernetes.io/hostname: kube-explorer-control-plane
+    kubernetes.io/os: linux
+    node-role.kubernetes.io/control-plane: ''
+spec:
+  taints:
+  - key: node-role.kubernetes.io/control-plane
+    effect: NoSchedule
+status:
+  allocatable:
+    cpu: '8'
+    memory: 16304520Ki
+    pods: '110'
+  conditions:
+  - type: Ready
+    status: 'True'
+    reason: KubeletReady
+---
+apiVersion: v1
+kind: Node
+metadata:
+  name: kube-explorer-worker
+  labels:
+    kubernetes.io/hostname: kube-explorer-worker
+    kubernetes.io/os: linux
+spec: {}
+status:
+  allocatable:
+    cpu: '8'
+    memory: 16304520Ki
+    pods: '110'
+  conditions:
+  - type: Ready
+    status: 'True'
+    reason: KubeletReady
+---
+apiVersion: v1
+kind: Node
+metadata:
+  name: kube-explorer-worker2
+  labels:
+    kubernetes.io/hostname: kube-explorer-worker2
+    kubernetes.io/os: linux
+    dedicated: batch
+spec:
+  taints:
+  - key: dedicated
+    value: batch
+    effect: NoSchedule
+status:
+  allocatable:
+    cpu: '8'
+    memory: 16304520Ki
+    pods: '110'
+  conditions:
+  - type: Ready
+    status: 'True'
+    reason: KubeletReady

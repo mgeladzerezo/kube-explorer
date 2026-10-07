@@ -1,0 +1,19 @@
+# Three nodes so the scheduling faults behave as described: the control plane keeps its
+# default taint, one worker is plain, and one is reserved for "batch" with a label and taint.
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+name: kube-explorer
+nodes:
+  - role: control-plane
+  - role: worker
+  - role: worker
+    labels:
+      dedicated: batch
+    kubeadmConfigPatches:
+      - |
+        kind: JoinConfiguration
+        nodeRegistration:
+          taints:
+            - key: dedicated
+              value: batch
+              effect: NoSchedule

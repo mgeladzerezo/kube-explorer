@@ -1,0 +1,13 @@
+id: liveness-probe-failing
+title: Liveness probe targets the wrong port
+description: >
+  The liveness probe checks port 8080 while nginx listens on 80. The probe is refused,
+  and the kubelet restarts a container that is in fact healthy, over and over.
+namespace: fault-liveness-probe-failing
+target:
+  kind: Deployment
+  name: gateway
+expected_category: liveness_probe_failing
+expected_signals:
+  - "Liveness probe failed"
+  - "connection refused"
